@@ -1,12 +1,12 @@
 MicroPython-STM-Lib
 ===================
 
-A collection of Python modules and examples for [MicroPython][] running on an
-[STM32F4DICOVERY][] board or the original [pyboard][].
+A collection of Python modules and examples for [MicroPython] running on an
+[STM32F4DICOVERY] board or the original [pyboard].
 
 Currently, this collection contains:
 
-* `accel/` - a fixed version of [staccel.py][] from the main MicroPython repo
+* `accel/` - a fixed version of [staccel.py] from the main MicroPython repo
   including examples.
 * `encoder/` - a library for reading a rotary encoder connected to two digital
   input pins, including examples. Features gray code error checking, making
