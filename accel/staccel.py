@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+# -*- coding: utf-8 -*-
 """Driver for accelerometer on STM32F4-Discovery board.
 
 Sets accelerometer range at +-2g.
