@@ -1,8 +1,8 @@
-Micropython-STM-lib
+MicroPython-STM-Lib
 ===================
 
 A collection of Python modules and examples for [MicroPython][] running on an
-[STM32F4DICOVERY][] board or the original [pyboard][] including examples.
+[STM32F4DICOVERY][] board or the original [pyboard][].
 
 Currently, this collection contains:
 
