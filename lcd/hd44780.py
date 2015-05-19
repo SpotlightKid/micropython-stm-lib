@@ -242,9 +242,9 @@ class HD44780:
         self.send_byte(command, mode=LCD_CMD)
 
     def write(self, message, col=None, row=None):
-        """Write message to given row (default: 0):"""
-        if None not in (col, row):
-            self.set_cursor(col, row)
+        """Write message to given row."""
+        if col is not None or row is not None:
+            self.set_cursor(col or 0, row or 0)
 
         for c in message:
             self.send_byte(c)
