@@ -78,6 +78,7 @@ class HD44780:
     """Interface to a HD44780 LCD controller in 4-bit mode."""
 
     _default_pins = ('Y1', 'Y2', 'Y3', 'Y4', 'Y5', 'Y6')
+    row_offsets = (0x00, 0x40, 0x14, 0x54)
 
     def __init__(self, width=16, lines=2, pins=None, init=True):
         """Initialize instance and dictionary of output pin objects."""
@@ -216,18 +217,9 @@ class HD44780:
             self._displaymode &= ~LCD_ENTRYSHIFTINCREMENT
         self.command(LCD_ENTRYMODESET | self._displaymode)
 
-    def set_row(self, row):
-        """Set the row the next characters sent will be written to."""
-        row_offsets = (
-            0x80,  # LCD RAM address of the 1st display row
-            0xC0,  # LCD RAM address of the 2nd display row
-            # Add more if desired
-        )
-        self.command(row_offsets[row])
-
     def set_cursor(self, col, row=0):
-        row_offsets = (0x00, 0x40, 0x14, 0x54)
-        self.command(LCD_SETDDRAMADDR | col + row_offsets[row])
+        """Set the cursor the given column and row (default 0)."""
+        self.command(LCD_SETDDRAMADDR | col + self.row_offsets[row])
 
     def send_byte(self, byte, mode=LCD_CHR):
         """Send a byte to the data pins.
@@ -249,10 +241,12 @@ class HD44780:
     def command(self, command):
         self.send_byte(command, mode=LCD_CMD)
 
-    def write(self, message, row=0):
+    def write(self, message, col=None, row=None):
         """Write message to given row (default: 0):"""
-        self.set_cursor(0, row)
-        for c in message[:self.width]:
+        if None not in (col, row):
+            self.set_cursor(col, row)
+
+        for c in message:
             self.send_byte(c)
 
     def create_char(self, location, charmap):
