@@ -33,7 +33,7 @@ class Encoder(object):
         self._readings = (self._readings << 2 | self.pin_x.value() << 1 |
                           self.pin_y.value()) & 0x0f
 
-        self._state = ENC_STATES[self._last] * self.reverse
+        self._state = ENC_STATES[self._readings] * self.reverse
 
         if self._state:
             self._pos = min(max(self.min, self._pos + self._state), self.max)
