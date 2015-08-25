@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-"""MicroPython encoder library."""
+"""MicroPython rotary encoder library."""
 
 import pyb
 
