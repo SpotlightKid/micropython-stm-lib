@@ -2,7 +2,7 @@ Rotary Encoder Library
 ======================
 
 The file `encoder.py` provides a module to read a rotary encoder connected
-to two digital input pins of the [pyboard] (or and STM32F4DISCOVERY board) via
+to two digital input pins of a [pyboard] or an STM32F4DISCOVERY board via
 external interrupts.
 
 It uses gray code error checking using the technique described in this [blog
