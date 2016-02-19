@@ -23,13 +23,13 @@ class MidiOut:
 
     def send(self, msg):
         """Send a MIDI message to the serial device."""
-        return self.device.write(bytearray(msg))
+        return self.device.write(bytes(msg))
 
     # Channel Mode Messages
 
     def channel_message(self, command, *data, ch=None):
         """Send a MIDI channel mode message to the serial device."""
-        command = (command & 0xF0) | ((ch if ch else self.channel) - 1 & 0xf)
+        command = (command & 0xf0) | ((ch if ch else self.channel) - 1 & 0xf)
         msg = [command] + [value & 0x7f for value in data]
         self.send(msg)
 
@@ -53,21 +53,18 @@ class MidiOut:
         else:
             self.channel_message(CHANNEL_PRESSURE, value, ch=ch)
 
-    def control_change(self, control, value, ch=None):
+    def control_change(self, control, value, lsb=False, ch=None):
         """Send a 'Control Change' message."""
-        self.channel_message(CONTROLLER_CHANGE, control, value, ch=ch)
+        self.channel_message(CONTROLLER_CHANGE, control,
+                             value >> 7 if lsb else value, ch=ch)
 
-    def program_change(self, value, bank=None, ch=None):
-        """Send a 'Program Change' message.
+        if lsb and control < 20:
+            self.channel_message(CONTROLLER_CHANGE, control + 32, value, ch=ch)
 
-        If *bank* is given, send 'Bank Select' LSB and MSB messages first.
-
-        """
-        if bank:
-            self.control_change(BANK_SELECT_LSB, bank, ch=ch)
-            self.control_change(BANK_SELECT, bank >> 7, ch=ch)
-
-        self.channel_message(PROGRAM_CHANGE, value, ch=ch)
+    def program_change(self, program, bank=None, msb=None, lsb=None, ch=None):
+        """Send a 'Program Change' message."""
+        self.bank_select(bank, msb, lsb, ch)
+        self.channel_message(PROGRAM_CHANGE, program, ch=ch)
 
     def pitch_bend(self, value=0x2000, ch=None):
         """Send a 'Pitch Bend' message.
@@ -147,21 +144,60 @@ class MidiOut:
 
     # Controllers
 
-    def modulation(self, value, fine=False, ch=None):
-        """Send modulation control change."""
-        if fine:
-            self.control_change(MODULATION_WHEEL_LSB, value, ch=ch)
-            self.control_change(MODULATION_WHEEL, value >> 7, ch=ch)
-        else:
-            self.control_change(MODULATION_WHEEL, value, ch=ch)
+    def bank_select(self, bank=None, msb=None, lsb=None, ch=None):
+        """Send 'Bank Select' MSB and/or LSB 'Control Change' message.
 
-    def volume(self, value, fine=False, ch=None):
+        If *bank* is given, send 'Bank Select' LSB and MSB messages. The bank
+        select MSB and LSB can also be given separately with the *msb* and
+        *lsb* keyword arguments or only one of either. *bank* takes precedence
+        over *msb* and *lsb* and all are optional.
+
+        """
+        if bank:
+            msb = bank >> 7
+            lsb = bank
+
+        if msb is not None:
+            self.control_change(BANK_SELECT, msb, ch=ch)
+
+        if lsb is not None:
+            self.control_change(BANK_SELECT_LSB, lsb, ch=ch)
+
+    def modulation(self, value, lsb=False, ch=None):
+        """Send modulation control change."""
+        self.control_change(MODULATION_WHEEL, value, lsb, ch)
+
+    def breath_controller(self, value, lsb=False, ch=None):
+        """Send breath controller control change."""
+        self.control_change(BREATH_CONTROLLER, value, lsb, ch)
+
+    def foot_controller(self, value, lsb=False, ch=None):
+        """Send foot controller control change."""
+        self.control_change(FOOT_CONTROLLER, value, lsb, ch)
+
+    def portamento_time(self, value, lsb=False, ch=None):
+        """Send portamento time control change."""
+        self.control_change(PORTAMENTO_TIME, value, lsb, ch)
+
+    def data_entry(self, value, lsb=False, ch=None):
+        """Send data entry control change."""
+        self.control_change(DATA_ENTRY, value, lsb, ch)
+
+    def volume(self, value, lsb=False, ch=None):
         """Send volume control change."""
-        if fine:
-            self.control_change(CHANNEL_VOLUME_LSB, value, ch=ch)
-            self.control_change(CHANNEL_VOLUME, value >> 7, ch=ch)
-        else:
-            self.control_change(CHANNEL_VOLUME, value, ch=ch)
+        self.control_change(CHANNEL_VOLUME, value, lsb, ch)
+
+    def balance(self, value, lsb=False, ch=None):
+        """Send balance control change."""
+        self.control_change(BALANCE, value, lsb, ch)
+
+    def pan(self, value, lsb=False, ch=None):
+        """Send pan control change."""
+        self.control_change(PAN, value, lsb, ch)
+
+    def expression(self, value, lsb=False, ch=None):
+        """Send expression controller control change."""
+        self.control_change(EXPRESSION_CONTROLLER, value, lsb, ch)
 
     def all_sound_off(self, ch=None):
         """Send 'All Sound Off' controller change message."""
