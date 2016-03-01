@@ -7,19 +7,26 @@ from .constants import *
 class MidiOut:
     """MIDI output class."""
 
-    def __init__(self, device, channel=1):
+    def __init__(self, device, ch=1):
         if not hasattr(device, 'write'):
             raise TypeError("device instance must have a 'write' method.")
 
-        if channel < 1 or channel > 16:
-            raise ValueError('channel must be an integer between 1..16.')
-
         self.device = device
-        self.channel = channel
+        self.channel = ch
 
     def __repr__(self):
         return '<MidiOut: device={} channel={}>'.format(
             self.device, self.channel)
+
+    @property
+    def channel(self):
+        return self._ch
+
+    @channel.setter
+    def channel(self, ch):
+        if not 1 <= ch <=16:
+            raise ValueError('Channel must be an integer between 1..16.')
+        self._ch = ch
 
     def send(self, msg):
         """Send a MIDI message to the serial device."""
@@ -35,11 +42,11 @@ class MidiOut:
 
     def note_off(self, note, velocity=0, ch=None):
         """Send a 'Note Off' message."""
-        self.channel_message(NOTE_OFF, note, velocity)
+        self.channel_message(NOTE_OFF, note, velocity, ch=ch)
 
     def note_on(self, note, velocity=127, ch=None):
         """Send a 'Note On' message."""
-        self.channel_message(NOTE_ON, note, velocity)
+        self.channel_message(NOTE_ON, note, velocity, ch=ch)
 
     def pressure(self, value, note=None, ch=None):
         """Send an 'Aftertouch' or 'Channel Pressure' message.
@@ -48,10 +55,10 @@ class MidiOut:
         pressure) message, otherwise send a Channel (mono) pressure message.
 
         """
-        if note:
-            self.channel_message(POLYPHONIC_PRESSURE, note, value, ch=ch)
-        else:
+        if note is None:
             self.channel_message(CHANNEL_PRESSURE, value, ch=ch)
+        else:
+            self.channel_message(POLYPHONIC_PRESSURE, note, value, ch=ch)
 
     def control_change(self, control, value, lsb=False, ch=None):
         """Send a 'Control Change' message."""
@@ -153,9 +160,8 @@ class MidiOut:
         over *msb* and *lsb* and all are optional.
 
         """
-        if bank:
-            msb = bank >> 7
-            lsb = bank
+        if bank is not None:
+            msb, lsb = bank >> 7, bank
 
         if msb is not None:
             self.control_change(BANK_SELECT, msb, ch=ch)
