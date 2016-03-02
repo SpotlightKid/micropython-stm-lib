@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 """MicroPython MIDI input library."""
 
-import sys
-
 from .constants import *
 
 
@@ -40,6 +38,7 @@ class MidiIn:
 
     def _error(self, msg, *args):
         if self.debug:
+            import sys
             print(msg % args, file=sys.stderr)
 
     def _read(self):
