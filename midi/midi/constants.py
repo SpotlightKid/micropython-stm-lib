@@ -195,9 +195,9 @@ END_OF_EXCLUSIVE = const(0xF7)
 
 # MIDI Time Code Formats
 MTC_FRAME_RATE_24 = const(0)
-MTC_FRAME_RATE_25 = const(2)
-MTC_FRAME_RATE_30_DROP = const(4)
-MTC_FRAME_RATE_30 = const(6)
+MTC_FRAME_RATE_25 = const(1)
+MTC_FRAME_RATE_30_DROP = const(2)
+MTC_FRAME_RATE_30 = const(3)
 
 
 ###################################################
