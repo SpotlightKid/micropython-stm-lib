@@ -62,10 +62,11 @@ class MidiOut:
 
     def control_change(self, control, value, lsb=False, ch=None):
         """Send a 'Control Change' message."""
+        lsb = lsb and control < 32
         self.channel_message(CONTROLLER_CHANGE, control,
                              value >> 7 if lsb else value, ch=ch)
 
-        if lsb and control < 20:
+        if lsb:
             self.channel_message(CONTROLLER_CHANGE, control + 32, value, ch=ch)
 
     def program_change(self, program, bank=None, msb=None, lsb=None, ch=None):
@@ -145,8 +146,14 @@ class MidiOut:
     # System Exclusive Messages
 
     def system_exclusive(self, msg):
-        if msg[0] != SYSTEM_EXCLUSIVE or msg[-1] != END_OF_EXCLUSIVE:
-            raise ValueError("Invalid system exclusive message.")
+        if not msg or msg[0] != SYSTEM_EXCLUSIVE:
+            raise ValueError("System exclusive message must start with 0xF0.")
+        if msg[-1] != END_OF_EXCLUSIVE:
+            raise ValueError("System exclusive message must end with 0xF7.")
+        for value in msg[1:-1]:
+            if not 0 <= value <= 127:
+                raise ValueError(
+                    "System exclusive message data byte out of range 0-127.")
         self.send(msg)
 
     # Controllers
@@ -213,13 +220,19 @@ class MidiOut:
         """Send 'Reset All Controllers' controller change message."""
         self.control_change(RESET_ALL_CONTROLLERS, 0, ch=ch)
 
-    def local_control(self, enable=True, ch=None):
+    def local_control(self, on=True, ch=None):
         """Enable or disable local control."""
-        self.control_change(LOCAL_CONTROL_ONOFF, 127 if enable else 0, ch=ch)
+        self.control_change(LOCAL_CONTROL_ONOFF, 127 if on else 0, ch=ch)
 
     def all_notes_off(self, ch=None):
         """Send 'All Notes Off' message."""
         self.control_change(ALL_NOTES_OFF, 0, ch=ch)
+
+    def omni_mode(self, on=True, ch=None):
+        self.control_change(OMNI_MODE_ON if on else OMNI_MODE_OFF, 0, ch=ch)
+
+    def poly_mode(self, on=True, ch=None):
+        self.control_change(POLY_MODE_ON if on else MONO_MODE_ON, 0, ch=ch)
 
     def panic(self, channels=range(1,17)):
         """Reset everything and stop making noise."""
