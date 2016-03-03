@@ -1,8 +1,8 @@
 MIDI Input/Output Library
 =========================
 
-The package `midi` provides modules send and receive MIDI messages over a
-serial interface of the [pyboard] or compatible boards (for example the
+The package `midi` provides support for sending and receiving MIDI messages
+over a serial interface of the [pyboard] or compatible boards (for example the
 STM32F4DISCOVERY board).
 
 MIDI input and output classes are available in the separate sub-modules
@@ -30,7 +30,7 @@ what is needed.
 
 ### Creating a `MidiOut` Instance
 
-First import the `MidiOut` class from the `midi.midiout` module and create an
+Import the `MidiOut` class from the `midi.midiout` module and create an
 instance of it:
 
     from midi.midiout import MidiOut
@@ -39,20 +39,24 @@ instance of it:
 
 The constructor expects an instance of a serial device class as the first
 positional argument. Actually the only requirement for the passed object is
-that it has a `write` method, which accepts one argument of type `bytes`. This
-could be an instance of `pyb.UART` for serial devices or `pyb.USB_VCP` when
-using the USB virtual comm port. If a serial device is used, which is connected
-to a MIDI output circuit, its baud rate should be set to 31250.
+that it has a `write` method, which accepts one argument of type `bytes`. A
+`TypeError` is raised otherwise. The given object could be an instance of
+`pyb.UART` for serial devices or `pyb.USB_VCP` when using the USB virtual comm
+port. If a serial device is used, which is connected to a MIDI output circuit,
+the baud rate should be set to 31250.
 
 You can also optionally pass a MIDI channel number as a second parameter to the
-constructor. This can be retrieved and sets via the `channel` property of the
+constructor. This can be retrieved and set via the `channel` property of the
 instance and is used as the default channel for channel messages send via this
-instance. It must be an integer between 1 and 16.
+instance. It must be an integer between 1 and 16 and a `ValueError` is raised
+when the given channel is out of range or you try to set the `channel` property
+to an invalid value.
+
 
 ### Sending MIDI Messages
 
-The generic method to send a MIDI message is `send` and takes the message to
-send as a single argument, which should be an iterable yielding integers, e.g.
+The generic method to send a MIDI message is `send` and it takes the message to
+send as a single argument, which must be an iterable yielding integers, e.g.
 a `tuple` or `list` of integers, a `bytes` or `bytearray` instance or similar:
 
     # send a Note On message on channel 10 for note 36, velocity 100
@@ -96,7 +100,7 @@ Mono and Poly Pressure:
     # Send a channel pressure message:
     midiout.pressure(value)
     # Send a poly pressure message:
-    midiout.note_off(value, note)
+    midiout.pressure(value, note)
 
 Program Change and Bank Select:
 
@@ -114,15 +118,23 @@ Control Change:
 
     midiout.control_change(controller, value)
 
+The `midi.constants` module defines constants for all standard controller
+numbers. These constants are also imported into the namespace of the
+`midi.midiout` module. This allows you to send control change messages with
+controller numbers, for which no convenience method has been provided, but keep
+the code readable:
+
+    midiout.control_change(LEGATO_ONOFF, 127)
+
 High-Resolution Controllers:
 
-This method and each of the standard controller message methods below accepts
-an optional boolean keyword parameter `lsb`, which defaults to `False`. If it
-is `True`, `value` is interpreted as a 14-bit value and two control change
-methods are sent. First one with the given controller number and the upper 7
-bits of `value` as the control value, and then another with the given
-controller number plus 32 and the lower 7 bits of `value` as the control value.
-`lsb` is ignored for controller numbers `>= 32`.
+The `control_change` method and each of the standard controller message methods
+below accept an optional boolean keyword parameter `lsb`, which defaults to
+`False`. If it is `True`, `value` is interpreted as a 14-bit value and two
+control change messagess are sent. First one with the given controller number
+and the upper 7 bits of `value` as the control value, and then another with the
+given controller number plus 32 and the lower 7 bits of `value` as the control
+value. `lsb` is ignored for controller numbers `>= 32`.
 
 Standard Controllers:
 
@@ -149,25 +161,28 @@ Standard Controllers:
     midiout.all_sound_off()
     midiout.reset_all_controllers()
     midiout.all_notes_off()
-    # Send a local control message with value 127:
-    midiout.local_control(True)
-    # Send a local control message with value 0:
+
+    # Send a local control message with value 127 (on):
+    midiout.local_control()
+    # Send a local control message with value 0 (off):
     midiout.local_control(False)
-    # Send a omni mode on message:
-    midiout.local_control(True)
-    # Send omni mode off message:
+
+    # Send an omni mode on message:
+    midiout.omni_mode()
+    # Send an omni mode off message:
     midiout.omni_mode(False)
+
+    # Send a poly mode on message:
+    midiout.poly_mode()
     # Send a mono mode on message:
     midiout.poly_mode(False)
-    # Send poly mode on message:
-    midiout.poly_mode(True)
 
     # Send all notes off, all sound off and reset all controllers on
     # all channels:
     midiout.panic()
-    # ... or on given list of channels:
+    # ... or on the given list of channels:
     midiout.panic(range(1,4))
-    # ... or onyl on given channel:
+    # ... or only on given channel:
     midiout.panic(16)
 
 
@@ -200,7 +215,7 @@ arbitrary length, where the first byte has the value `0xF0` and the last one
 `0xF7`. All bytes in between must have a value `<= 0x7F`. You can just use the
 `send` method to send sysex or use the `system_exclusive` method, which
 checks whether the given message (which must be a real sequence, not an
-iterator) confirms to this rules.
+iterator) confirms to this rules and raises a `ValueError` otherwise.
 
     midiout.system_exclusive([0xF0, 0x7E, 0, 6, 1, 0xF7])
 
