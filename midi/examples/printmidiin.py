@@ -1,6 +1,6 @@
 import pyb
 
-from mid.midiin import MidiIn
+from midi.midiin import MidiIn
 
 
 def midi_printer(msg):
@@ -9,8 +9,8 @@ def midi_printer(msg):
 def loop(midiin):
     while True:
         midiin.poll()
-        pyb.udelay(500)
+        pyb.udelay(50)
 
-uart = py.UART(2, 31250)
+uart = pyb.UART(2, 31250)
 midiin = MidiIn(uart, callback=midi_printer)
 loop(midiin)
