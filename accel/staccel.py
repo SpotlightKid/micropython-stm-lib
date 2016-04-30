@@ -56,14 +56,15 @@ class STAccel:
         self.debug("Accel-ID: %s" % self.who_am_i)
 
         if self.who_am_i == LIS302DL_WHO_AM_I_VAL:
-            self.write_bytes(LIS302DL_CTRL_REG1_ADDR, bytearray([LIS302DL_CONF]))
+            self.write_bytes(LIS302DL_CTRL_REG1_ADDR, LIS302DL_CONF)
             self.sensitivity = 18
         elif self.who_am_i == LIS3DSH_WHO_AM_I_VAL:
-            self.write_bytes(LIS3DSH_CTRL_REG4_ADDR, bytearray([LIS3DSH_CTRL_REG4_CONF]))
-            self.write_bytes(LIS3DSH_CTRL_REG5_ADDR, bytearray([LIS3DSH_CTRL_REG5_CONF]))
+            self.write_bytes(LIS3DSH_CTRL_REG4_ADDR, LIS3DSH_CTRL_REG4_CONF)
+            self.write_bytes(LIS3DSH_CTRL_REG5_ADDR, LIS3DSH_CTRL_REG5_CONF)
             self.sensitivity = 0.06 * 256
         else:
             msg = 'LIS302DL or LIS3DSH accelerometer not present'
+
             if self._debug:
                 self.debug(msg)
             else:
@@ -75,29 +76,33 @@ class STAccel:
 
     def _convert_raw_to_g(self, x):
         if x & 0x80:
-            x = x - 256
+            x -= 256
+
         return x * self.sensitivity / 1000
 
     def read_bytes(self, addr, nbytes):
-        if nbytes > 1:
-            addr |= READWRITE_CMD | MULTIPLEBYTE_CMD
-        else:
-            addr |= READWRITE_CMD
         self.cs_pin.low()
-        self.spi.send(addr)
+
+        if nbytes > 1:
+            self.spi.send(addr | READWRITE_CMD | MULTIPLEBYTE_CMD)
+        else:
+            self.spi.send(addr | READWRITE_CMD)
+
         # read data, MSB first
-        #buf = self.spi.send_recv(bytearray(nbytes * [0]))
         buf = self.spi.recv(nbytes)
         self.cs_pin.high()
         return buf
 
     def write_bytes(self, addr, buf):
-        if len(buf) > 1:
+        if not isinstance(buf, (int, bytes, bytearray)):
+            buf = bytes(buf)
+
+        if not isinstance(buf, int) and len(buf) > 1:
             addr |= MULTIPLEBYTE_CMD
+
         self.cs_pin.low()
         self.spi.send(addr)
-        for b in buf:
-            self.spi.send(b)
+        self.spi.send(buf)
         self.cs_pin.high()
 
     def read_id(self):
