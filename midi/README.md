@@ -82,8 +82,9 @@ Additional positional parameters are used as the data bytes of the MIDI message
 and must be integers, which will be OR'ed with `0x7F` to ensure they have a
 value range `0..127`.
 
-The parameters of the methods listed below in this section, except `ch` and
-where noted otherwise, have a value range `1..127`.
+All the parameters of the methods listed below in this section have a value
+range of `0..127`, except the `ch` parameter (`1..16`) and where noted
+otherwise.
 
 Note On / Off:
 
