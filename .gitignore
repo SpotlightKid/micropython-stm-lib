@@ -1,6 +1,8 @@
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
+# MicroPython pre-compiled module files
+*.mpy
 
 # C extensions
 *.so
