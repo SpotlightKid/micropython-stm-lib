@@ -2,7 +2,7 @@ MicroPython-STM-Lib
 ===================
 
 A collection of Python modules and examples for [MicroPython] running on an
-[STM32F4DICOVERY] board or the original [pyboard].
+[STM32F4DISCOVERY] board or the original [pyboard].
 
 Currently, this collection contains:
 
@@ -32,7 +32,7 @@ under the MIT License.
 
 
 [micropython]: http://micropython.org
-[stm32f4dicovery]: http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419
+[stm32f4discovery]: http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419
 [pyboard]: https://micropython.org/store/#/products/PYBv1_0
 [staccel.py]: https://github.com/micropython/micropython/blob/master/stmhal/boards/STM32F4DISC/staccel.py
 
