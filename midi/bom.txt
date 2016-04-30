@@ -1,0 +1,7 @@
+Amount | Part               | Circuit Symbol
+-------|--------------------|---------------
+4      | Resistor 220 Ohm   | R1, R2, R3, R4
+1      | Resistor 4.7 kOhm  | R5
+1      | Diode 1N4148       | D1
+1      | Opto-Coupler 6N138 | IC1
+2      | MIDI DIN-5 sockets | CN1, CN2
