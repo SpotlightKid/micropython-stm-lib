@@ -286,7 +286,7 @@ class HD44780:
 
     def _send_nibble(self, nibble):
         """Send a nibble (4 bits) by setting data pins D4-7 and pulsing EN."""
-        self._set_pin('D4', nibble >> 0 & 1)
+        self._set_pin('D4', nibble & 1)
         self._set_pin('D5', nibble >> 1 & 1)
         self._set_pin('D6', nibble >> 2 & 1)
         self._set_pin('D7', nibble >> 3 & 1)
