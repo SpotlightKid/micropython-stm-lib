@@ -7,7 +7,7 @@ from hd44780 import HD44780
 
 
 class STM_LCDShield(HD44780):
-    _default_pins = ('PD2','PD1','PD6','PD5','PD4','PD3')
+    _default_pins = ('PD2', 'PD1', 'PD6', 'PD5', 'PD4', 'PD3')
 
 
 def main():
@@ -17,7 +17,7 @@ def main():
     while True:
         val = enc.value
         if lastval != val:
-            lastpos = val
+            lastval = val
             lcd.set_cursor(6, 0)
             for c in "%3i" % val:
                 lcd.send_byte(c)
