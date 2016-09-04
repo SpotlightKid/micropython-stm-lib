@@ -4,18 +4,19 @@
 Usage:
 
     from time import sleep_ms
-    from esp_encoder import Encoder
+    from encoder import Encoder
 
-    enc = Encoder(4, 5)
+    # Connect CLK to D6, DT to D5, GND to GND and + to 3V3
+    enc = Encoder(pin_clk=12, pin_dt=14)
 
     def readloop(e):
-        oldval = -1
+        oldval = 0
         while True:
-            val = int(enc.value)
+            val = enc.value
             if oldval != val:
                 print(val)
                 oldval = val
-            sleep_ms(100)
+            sleep_ms(50)
 
     readloop(e)
 """
@@ -41,7 +42,6 @@ ENC_STATES = (
     -1,  # 11 10
     0    # 11 11
 )
-IRQ_MODE = Pin.IRQ_RISING | Pin.IRQ_FALLING
 ACCEL_THRESHOLD = const(5)
 
 
@@ -83,8 +83,13 @@ class Encoder(object):
                               self._state))
 
     def set_callbacks(self, callback=None):
-        self.irq_clk = self.pin_clk.irq(trigger=IRQ_MODE, handler=callback)
-        self.irq_dt = self.pin_dt.irq(trigger=IRQ_MODE, handler=callback)
+        mode = Pin.IRQ_RISING | PIN.IRQ_FALLING
+        self.irq_clk = self.pin_clk.irq(trigger=mode, handler=callback)
+        self.irq_dt = self.pin_dt.irq(trigger=mode, handler=callback)
+
+    def close(self):
+        self.set_callbacks(None)
+        self.irq_clk = self.irq_dt = None
 
     @property
     def value(self):
@@ -105,16 +110,14 @@ def test(enc=None, **kwargs):
         enc = Encoder(**kwargs)
 
     oldval = 0
-    while True:
-        val = enc.value
-        if oldval != val:
-            print(val)
-            oldval = val
+    try:
+        while True:
+            val = enc.value
+            if oldval != val:
+                print(val)
+                oldval = val
 
-        enc.cur_accel = max(0, enc.cur_accel - enc.accel)
-
-        sleep_ms(1000 // rate)
-
-
-if __name__ == '__main__':
-    test()
+            enc.cur_accel = max(0, enc.cur_accel - enc.accel)
+            sleep_ms(1000 // rate)
+    except:
+        enc.close()
