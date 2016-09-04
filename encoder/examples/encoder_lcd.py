@@ -22,10 +22,11 @@ def main():
             for c in "%3i" % val:
                 lcd.send_byte(c)
 
+        enc.cur_accel = max(0, enc.cur_accel - enc.accel)
         sleep_ms(50)
 
 
 if __name__ == '__main__':
     lcd = STM_LCDShield()
-    enc = Encoder('A0', 'A1', max_value=999)
+    enc = Encoder('A0', 'A1', max_value=999, accel=5)
     main()
