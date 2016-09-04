@@ -17,9 +17,11 @@ cheap encoders, which usually have switches with lots of bouncing.
 Encoder Hookup
 --------------
 
-* Connect the middle pin of the encoder to ground.
-* Connect one of the outer pins of the encoder to PA0 on the STM32F4.
-* Connect the other outer pin of the encoder to PA1 on the STM32F4.
+* Connect the GND pin of the encoder to ground.
+* Connect the CLK pin of the encoder to a GPIO pin on the board
+  (e.g. 'X11' on the pyboard).
+* Connect the DT pin of the encoder to another GPIO on the board
+  (e.g. 'X12' on the pyboard).
 
 If you configure the input pins with the internal pull-up resistors turned on,
 you don't need to connect 5V from the board to anything, since the input pins
@@ -32,7 +34,7 @@ Then use the `Encoder` class like this:
     from machine import sleep_ms
     from encoder import Encoder
 
-    e = Encoder('A0', 'A1')  # optional: add pin_mode=Pin.PULL_UP
+    e = Encoder('X11', 'X12')  # optional: add pin_mode=Pin.PULL_UP
     lastval = e.value
 
     while True:
