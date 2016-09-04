@@ -83,7 +83,7 @@ class Encoder(object):
                               self._state))
 
     def set_callbacks(self, callback=None):
-        mode = Pin.IRQ_RISING | PIN.IRQ_FALLING
+        mode = Pin.IRQ_RISING | Pin.IRQ_FALLING
         self.irq_clk = self.pin_clk.irq(trigger=mode, handler=callback)
         self.irq_dt = self.pin_dt.irq(trigger=mode, handler=callback)
 
@@ -104,10 +104,11 @@ def test(enc=None, **kwargs):
     rate = kwargs.pop('rate', 20)
 
     if not isinstance(enc, Encoder):
+        cls = kwargs.pop('encoder_cls', Encoder)
         kwargs.setdefault('pin_clk', 12)
         kwargs.setdefault('pin_dt', 14)
         kwargs.setdefault('clicks', 4)
-        enc = Encoder(**kwargs)
+        enc = cls(**kwargs)
 
     oldval = 0
     try:
