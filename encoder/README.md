@@ -67,5 +67,11 @@ the faster your turn the encoder. You can still make fine adjustment by turning
 the encoder slowly.
 
 
+TODO
+----
+
+* Integrate de-acceleration into interrupt callback (time-based).
+
+
 [pyboard]: http://docs.micropython.org/en/latest/pyboard/quickref.html
 [blog post]: https://www.circuitsathome.com/mcu/reading-rotary-encoder-on-arduino
