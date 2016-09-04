@@ -48,8 +48,8 @@ When everything is hooked up, use the `Encoder` class like this:
         sleep_ms(100)
 
 
-Clicks and Aceleration
-----------------------
+Clicks and Acceleration
+-----------------------
 
 Normally the encoder value is de-/increased by one for every encoder pulse.
 Most encoders generate several pulses per dedent ("click"). You can pass the
@@ -59,10 +59,10 @@ decrement of one for every click with no acceleration.
 
 If you have a large value range (you can set the range with the `min_val` and
 `max_val` keyword arguments), scrolling from one end of the range to the other
-can be very cumbersome. You can enable acceleration by passing the a positive
+can be very cumbersome. You can enable acceleration by passing a positive
 integer to the `accel` keyword argument. The proper value depends on value
 range and the type of the encoder, but usually low one-digit numbers like 3-5
-work well. With accelertion enabled the increment/decrement per click increases
+work well. With acceleration enabled the increment/decrement per click increases
 the faster your turn the encoder. You can still make fine adjustment by turning
 the encoder slowly.
 
