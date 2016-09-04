@@ -6,7 +6,7 @@ from pyb_encoder import Encoder
 
 def main():
     enc = Encoder('A0', 'A1')
-    lastpos = 0
+    lastval = 0
 
     while True:
         val = enc.value
