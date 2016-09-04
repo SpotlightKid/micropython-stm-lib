@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-import pyb
-
-from encoder import Encoder
+from machine import sleep_ms
+from pyb_encoder import Encoder
 
 
 def main():
-    e = Encoder('A0', 'A1', pyb.Pin.PULL_UP)
-    lastpos = e.position
+    enc = Encoder('A0', 'A1')
+    lastpos = 0
 
     while True:
-        if lastpos != e.position:
-            lastpos = e.position
-            print(lastpos)
-        pyb.delay(100)
+        val = enc.value
+        if lastval != val:
+            lastval = val
+            print(val)
+        sleep_ms(50)
 
 
 if __name__ == '__main__':
