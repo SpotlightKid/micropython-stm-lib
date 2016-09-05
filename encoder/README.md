@@ -52,9 +52,9 @@ Clicks and Acceleration
 -----------------------
 
 Normally the encoder value is de-/increased by one for every encoder pulse.
-Most encoders generate several pulses per dedent ("click"). You can pass the
+Most encoders generate several pulses per detent ("click"). You can pass the
 `clicks` keyword when instantiating the `Encoder` class to set the number of
-pulses per dedent. A common value is four. This will result in an increment /
+pulses per detent. A common value is four. This will result in an increment /
 decrement of one for every click with no acceleration.
 
 If you have a large value range (you can set the range with the `min_val` and
