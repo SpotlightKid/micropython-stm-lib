@@ -1,4 +1,4 @@
-from .constants_min import *
+from.constants_min import*
 class MidiOut:
  def __init__(self,device,ch=1):
   if not hasattr(device,'write'):raise TypeError("device instance must have a 'write' method.")
@@ -66,12 +66,12 @@ class MidiOut:
   if not msg or msg[0]!=SYSTEM_EXCLUSIVE:raise ValueError("System exclusive message must start with 0xF0.")
   if msg[-1]!=END_OF_EXCLUSIVE:raise ValueError("System exclusive message must end with 0xF7.")
   for value in msg[1:-1]:
-    if not 0<=value<=127:raise ValueError("System exclusive message data byte out of range 0-127.")
+   if not 0<=value<=127:raise ValueError("System exclusive message data byte out of range 0-127.")
   self.send(msg)
  def bank_select(self,bank=None,msb=None,lsb=None,ch=None):
-  if bank is not None: msb,lsb=bank>>7,bank
-  if msb is not None: self.control_change(BANK_SELECT,msb,ch=ch)
-  if lsb is not None: self.control_change(BANK_SELECT_LSB,lsb,ch=ch)
+  if bank is not None:msb,lsb=bank>>7,bank
+  if msb is not None:self.control_change(BANK_SELECT,msb,ch=ch)
+  if lsb is not None:self.control_change(BANK_SELECT_LSB,lsb,ch=ch)
  def modulation(self,value,lsb=False,ch=None):
   self.control_change(MODULATION_WHEEL,value,lsb,ch)
  def breath_controller(self,value,lsb=False,ch=None):
