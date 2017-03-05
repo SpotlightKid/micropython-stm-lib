@@ -62,9 +62,24 @@ If you have a large value range (you can set the range with the `min_val` and
 can be very cumbersome. You can enable acceleration by passing a positive
 integer to the `accel` keyword argument. The proper value depends on value
 range and the type of the encoder, but usually low one-digit numbers like 3-5
-work well. With acceleration enabled the increment/decrement per click increases
-the faster your turn the encoder. You can still make fine adjustment by turning
-the encoder slowly.
+work well. With acceleration enabled the increment/decrement per click
+increases the faster your turn the encoder. You can still make fine adjustment
+by turning the encoder slowly.
+
+Currently, if you use the acceleration feature, you need to take care of
+decreasing the the current acceleration, which increases everytime a valid
+pulse is read from the encoder. Normally you would do this at the end of your
+main loop, i.e. once per poll interval:
+
+    oldval = 0
+    while True:
+        val = enc.value
+        if oldval != val:
+            print(val)
+            oldval = val
+
+        enc.cur_accel = max(0, enc.cur_accel - enc.accel)
+        sleep_ms(50)
 
 
 TODO
