@@ -66,18 +66,19 @@ with a 31250 baud rate the time to receive one byte is about 0.3 milliseconds.
 
 ### Soft Thru
 
-If you pass `softthru=True` to the `MidiIn` contructure, the serial device
+If you pass `softthru=True` to the `MidiIn` contructor, the serial device
 instance you pass must also have a `write` method, which accepts one argument
 of type `bytes`. Each byte received via the `read` method of the device is then
 passed to the `write` method unfiltered and unaltered. This allows you to
 use the MIDI output as a soft MIDI thru. Please note that this introduces a
-delay of the MIDI messages passed through, depending on your poll interval.
+delay of the MIDI messages passed through, the magnitude of which depends on
+your poll interval.
 
-Since bytes read from MIDI in are passed immediately without parsing, the
-`softthru` option should be avoided if you also send MIDI messages with the
-`MidiOut` class. To keep the proper sequence of MIDI bytes, the MIDI input and
-output would have to be logically merged. This module currently does not
-provide support for MIDI merging.
+Since bytes read from MIDI in are passed immediately, without parsing, one by
+one to the MIDI out, the `softthru` option will not work correctly if you also
+send MIDI messages with the `MidiOut` class. To keep the proper sequence of
+MIDI bytes, the MIDI input and output have to be logically merged in this case.
+This library currently does not provide support for MIDI merging.
 
 
 ### Ignoring Active Sense, Timing Clock or System Exclusive Messages
