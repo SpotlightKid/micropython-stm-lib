@@ -9,6 +9,89 @@ MIDI input and output classes are available in the separate sub-modules
 `midi.midiin` and `midi.midiout` respectively, so your code can import only
 what is needed.
 
+## MIDI Input
+
+### Usage example
+
+    import pyb
+    from midi.midiin import MidiIn
+
+    def midi_printer(msg):
+        print(tuple(msg))
+
+    uart = pyb.UART(2, 31250)
+    midiin = MidiIn(uart, callback=midi_printer)
+    while True:
+        midiin.poll()
+        pyb.udelay(50)
+
+### Creating a `MidiIn` Instance
+
+Import the `MidiIn` class from the `midi.midiin` module and create an
+instance of it:
+
+    from midi.midiin import MidiIn
+
+    midiout = MidiIn(uart)
+
+The constructor expects an instance of a serial device class as the first
+positional argument. Actually the only requirement for the passed object is
+that it has `any` and `read` methods. A `TypeError` is raised otherwise. The
+given object could be an instance of `pyb.UART` for serial devices or
+`pyb.USB_VCP` when using the USB virtual comm port. If a serial device is used,
+which is connected to a MIDI input circuit, the baud rate should be set to
+31250.
+
+You can also pass `debug=True`, which causes error messages to be printed to
+`sys.stderr` when data is received, that doesn't conform to the MIDI protocol.
+
+The remaining constructor arguments are explained in the following sections.
+
+
+### The Message Callback
+
+To handle incoming MIDI messages, you must also pass a callback function with
+the `callback` argument. This function is called whenever a complete MIDI
+message is received. It should expect one argument, a bytearray with the MIDI
+message. The bytearray has a variable length, depending on the type of the
+MIDI message.
+
+To actually read and parse the MIDI input and trigger the callback, you must
+call the `poll` method of the `MidiIn` instance regularly. You can choose the
+poll interval according to the needs determined by the rest of your code, but
+it should generally not be longer than it takes to receive a few characters at
+the current baud rate of your serial instance. For a standard MIDI interface
+with a 31250 baud rate the time to receive one byte is about 0.3 milliseconds.
+
+
+### Soft Thru
+
+If you pass `softthru=True` to the `MidiIn` contructure, the serial device
+instance you pass must also have a `write` method, which accepts one argument
+of type `bytes`. Each byte received via the `read` method of the device is then
+passed to the `write` method unfiltered and unaltered. This allows you to
+use the MIDI output as a soft MIDI thru. Please note that this introduces a
+delay of the MIDI messages passed through, depending on your poll interval.
+
+Since bytes read from MIDI in are passed immediately without parsing, the
+`softthru` option should be avoided if you also send MIDI messages with the
+`MidiOut` class. To keep the proper sequence of MIDI bytes, the MIDI input and
+output would have to be logically merged. This module currently does not
+provide support for MIDI merging.
+
+
+### Ignoring Active Sense, Timing Clock or System Exclusive Messages
+
+Normally the callback is called for every received message, regardless of its
+type. You can, however, enable filtering of certain message types, so that they
+are dropped and never reach your callback.
+
+To enable filtering, call the `ignore_types` method of your `MidiIn` instance
+and pass `active_sensing=True`, `clock=True` and/or `sysex=True` to filter out
+Active Sensing (0xFE), Timing Clock (0xF8) or System Exclusive (0xF0 ... 0xF7)
+Messages respectively. You can enable/disable all these filters at once or
+selectively.
+
 
 ## MIDI Output
 
@@ -216,7 +299,7 @@ arbitrary length, where the first byte has the value `0xF0` and the last one
 `0xF7`. All bytes in between must have a value `<= 0x7F`. You can just use the
 `send` method to send sysex or use the `system_exclusive` method, which
 checks whether the given message (which must be a real sequence, not an
-iterator) confirms to this rules and raises a `ValueError` otherwise.
+iterator) conforms to these rules and raises a `ValueError` otherwise.
 
     midiout.system_exclusive([0xF0, 0x7E, 0, 6, 1, 0xF7])
 
