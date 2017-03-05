@@ -8,7 +8,7 @@ Usage:
 
     enc = Encoder(pin_clk='X11', pin_dt='X12')
 
-    def readloop(e):
+    def readloop(enc):
         oldval = 0
         while True:
             val = enc.value
@@ -17,7 +17,7 @@ Usage:
                 oldval = val
             sleep_ms(50)
 
-    readloop(e)
+    readloop(enc)
 """
 
 from machine import Pin
