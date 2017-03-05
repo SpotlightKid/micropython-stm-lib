@@ -5,8 +5,6 @@ FIXME: not implemented yet
 
 """
 
-import sys
-
 from .constants import *
 
 
@@ -30,7 +28,7 @@ class Arp:
         """Add notes to the note buffer."""
         pass
 
-    def add(self, notes):
+    def remove(self, notes):
         """Remove notes from the note buffer."""
         pass
 
