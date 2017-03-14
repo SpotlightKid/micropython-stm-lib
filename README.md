@@ -11,10 +11,13 @@ Currently, this collection contains:
 * `encoder/` - a library for reading a rotary encoder connected to two digital
   input pins, including examples. Features gray code error checking, making
   software or hardware debouncing uneccessary in most cases.
-* `lcd/` - a library for interfaceing with a HD44780-compatible LCD controller,
+* `lcd/` - a library for interfacing with a HD44780-compatible LCD controller,
   including examples.
 * `midi/` - a library for receiving and sending MIDI data via the UARTs or the
-  USB virtual seriell interface, including examples.
+  USB virtual serial interface, including examples.
+* `spimaster/` - a rudmentary library to communicate via SPI with an ESP8266
+  module as the SPI slave, controlled by an Arduino sketch using the [SPISlave]
+  library.
 
 
 Author
@@ -35,4 +38,5 @@ under the MIT License.
 [stm32f4discovery]: http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419
 [pyboard]: https://micropython.org/store/#/products/PYBv1_0
 [staccel.py]: https://github.com/micropython/micropython/blob/master/stmhal/boards/STM32F4DISC/staccel.py
+[spislave]: https://github.com/esp8266/Arduino/tree/master/libraries/SPISlave
 
