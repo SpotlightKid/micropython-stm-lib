@@ -53,7 +53,7 @@ class Redis:
         self.connect(host, port)
 
     def connect(self, host=None, port=None):
-        if port is not None:
+        if host is not None:
             self._host = host
 
         if port is not None:
