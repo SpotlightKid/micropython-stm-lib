@@ -187,7 +187,7 @@ storage of your MicroPython board, e.g. using [ampy]:
     $ curl -O https://raw.githubusercontent.com/SpotlightKid/micropython-stm-lib/master/picoredis/picoredis/picoredis.py
     $ ampy -p /dev/ttyUSB0 put picoredis.py
 
-You can also compile the `picoredis.py` module with [mpy-cross] and use it the
+You can also compile the `picoredis.py` module with [mpy-cross] and use the
 resulting `picoredis.mpy` file as a drop-in replacement for the pure Python
 version. This will save you a good bit of memory on your MicroPython board,
 because the byte-code compilation step, that normally happens when you import
@@ -207,10 +207,10 @@ and open source software.
 
 ## Acknowledgements
 
-Some inspiration and code ideas where taken from these projects:
+Some inspiration and code ideas were taken from these projects:
 
-* [redis_protocol] by Young King
 * [micropython-redis] by Dwight Hubbard
+* [redis_protocol] by Young King
 
 
 [ampy]: https://github.com/adafruit/ampy
