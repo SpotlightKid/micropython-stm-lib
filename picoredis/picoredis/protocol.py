@@ -13,14 +13,15 @@ class ParseError(Exception):
 
 
 def encode_request(*args):
-    """Pack a series of arguments into a RESP array of bulk string."""
-    result = []
-    result.append("*")
-    result.append(str(len(args)))
-    result.append(CRLF)
+    """Pack a series of arguments into a RESP array of bulk strings."""
+    result = ["*" + str(len(args)) + CRLF]
     
     for arg in args:
-        result.append(encode_bulk_string(str('' if arg is None else arg)))
+        if arg is None:
+            result.append('$-1' + CRLF)
+        else:
+            s = str(arg)
+            result.append('$' + str(len(s)) + CRLF + s + CRLF)
 
     return "".join(result)
 
