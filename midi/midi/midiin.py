@@ -24,9 +24,7 @@ class MidiIn:
         self.softthru = softthru
         self._msgbuf = None
         self._status = None
-        self._ignore_active_sense = False
-        self._ignore_clock = False
-        self._ignore_sysex = False
+        self.ignore_types()
 
     def __repr__(self):
         return '<MidiIn: device={} callback={}>'.format(
@@ -53,6 +51,7 @@ class MidiIn:
 
         Pass ``active_sensing=True``, ``clock=True`` and/or ``sysex=True`` to
         enable the filter for the respective event types.
+
         """
         self._ignore_active_sense = active_sensing
         self._ignore_clock = clock
