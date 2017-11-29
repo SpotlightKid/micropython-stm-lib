@@ -44,5 +44,5 @@ under the MIT License.
 [micropython]: http://micropython.org/
 [stm32f4discovery]: http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419
 [pyboard]: https://store.micropython.org/#/products/PYBv1_1
-[staccel.py]: https://github.com/micropython/micropython/blob/master/stmhal/boards/STM32F4DISC/staccel.py
+[staccel.py]: https://github.com/micropython/micropython/blob/master/ports/stm32/boards/STM32F4DISC/staccel.py
 [spislave]: https://github.com/esp8266/Arduino/tree/master/libraries/SPISlave
