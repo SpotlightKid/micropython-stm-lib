@@ -84,8 +84,8 @@ connect with the `host` and `port` keyword arguments:
 >>> redis = Redis('192.168.1.100')
 >>> redis = Redis(port=6380)
 >>> redis = Redis('192.168.1.100', 6380)
->>> redis = Redis(server='192.168.1.100')
->>> redis = Redis(server='192.168.1.100', port=6380)
+>>> redis = Redis(host='192.168.1.100')
+>>> redis = Redis(host='192.168.1.100', port=6380)
 ```
 
 You can set the TCP socket timeout with the `timeout` keyword argument in
@@ -166,13 +166,11 @@ On CPython and PyPy use `pip` to install as usual:
 
     $ pip install picoredis
 
-On the MicroPython unix port, use the `upip`:
-
-    $ micropyton -m upip install picoredis
-
-On MicroPython base-metal ports (*esp8266*, *stm32*, *wipy*, etc.), just
-download the [picoredis.py] file from the repository and upload it to the flash
-storage of your MicroPython board, e.g. using [ampy]:
+On MicroPython, just download the [picoredis.py] file from the repository and,
+for the unix port, put it into your MICROPYPATH directory (normally
+`~/.micropython/lib`), or for base-metal ports (*esp8266*, *stm32*, *wipy*,
+etc.) upload it to the flash storage of your MicroPython board, for example
+using [ampy]:
 
     $ curl -O https://raw.githubusercontent.com/SpotlightKid/micropython-stm-lib/master/picoredis/picoredis/picoredis.py
     $ ampy -p /dev/ttyUSB0 put picoredis.py
