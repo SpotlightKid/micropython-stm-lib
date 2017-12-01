@@ -16,15 +16,16 @@ from micropython import const
 from picoredis import Redis
 
 
-LOGGING_INTERVAL = 60  # in seconds
-REDIS_HOST = '192.168.42.156'
+LOGGING_INTERVAL = 300  # in seconds
+REDIS_HOST = '192.168.1.111'
 REDIS_PORT = 6379
+REDIS_PASSWORD = 'XXXXXXXX'
 # a machine ID of the form -XX-XX-XX-XX wil be appended to this
 REDIS_KEY_PREFIX = 'esp8266-dht11'
 LOGGER_NAME = 'dht11-logger'
 DATABASE_FILENAME = 'dht11-logger.db'
 DT_ISOFORMAT = "{:04d}-{:02d}-{:02d}T{:02d}:{:02d}:{:02d}"
-DATA_PIN = const(16)  # D0 on NodeMCU board
+DATA_PIN = const(0)  # D1 on NodeMCU board
 
 
 class Logger:
@@ -63,24 +64,30 @@ def write_to_db(dbname, key, data):
 
 
 def main():
+    logger = Logger(LOGGER_NAME)
+    rtc = machine.RTC()
+    rtc.irq(trigger=rtc.ALARM0, wake=machine.DEEPSLEEP)
+    reset_cause = machine.reset_cause()
     data_pin = machine.Pin(DATA_PIN)
     dht11 = dht.DHT11(data_pin)
     nic = network.WLAN(network.STA_IF)
-    logger = Logger(LOGGER_NAME)
     machine_id = "-".join("{:02X}".format(c) for c in machine.unique_id())
     redis_key = REDIS_KEY_PREFIX + '-' + machine_id
-    logger.log("Starting up DHT11 data logger.", level='info')
+
+    if reset_cause != machine.DEEPSLEEP_RESET:
+        logger.log("Starting up DHT11 data logger.", level='info')
 
     if not nic.isconnected():
         nic.connect()
         # print("Waiting for connection...")
         while not nic.isconnected():
-            time.sleep(1)
+            time.sleep(0.2)
 
     ntptime.settime()
-    ifconfig = nic.ifconfig()
-    logger.log("Connected to network with address {}.".format(ifconfig[0]),
-               level='info')
+    if reset_cause != machine.DEEPSLEEP_RESET:
+        ifconfig = nic.ifconfig()
+        logger.log("Connected to network with address {}.".format(ifconfig[0]),
+                   level='info')
 
     while True:
         now = time.localtime()
@@ -97,6 +104,8 @@ def main():
         if nic.isconnected():
             try:
                 redis = Redis(REDIS_HOST, REDIS_PORT)
+                if REDIS_PASSWORD:
+                    redis.auth(REDIS_PASSWORD)
                 # returns new length of list
                 res = redis.lpush(redis_key, json_data)
             except Exception as exc:
@@ -115,4 +124,6 @@ def main():
                 logger.log("Could not write data to database: {}".format(exc),
                            level='error')
 
-        time.sleep(max(1, round(LOGGING_INTERVAL - (time.time() - start))))
+        wakeup_time = max(1, round(LOGGING_INTERVAL - (time.time() - start))) * 1000
+        rtc.alarm(rtc.ALARM0, wakeup_time)
+        machine.deepsleep()
