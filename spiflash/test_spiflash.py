@@ -5,10 +5,10 @@ from pyb import micros, Pin, SPI
 from spiflash import SPIFlash
 
 
-def test():
+def test(spi=3, cs='PB0'):
     print("SPI flash")
-    cs = Pin('PB0', Pin.OUT_PP)
-    spi = SPI(3, SPI.MASTER, baudrate=42000000, polarity=0, phase=0)
+    cs = Pin(cs, Pin.OUT_PP)
+    spi = SPI(spi, SPI.MASTER, baudrate=42000000, polarity=0, phase=0)
     flash = SPIFlash(spi, cs)
 
     print("Getting chip ID...")

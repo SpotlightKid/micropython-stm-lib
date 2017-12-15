@@ -7,10 +7,10 @@ from utime import ticks_diff, ticks_us
 from spiflash import SPIFlash
 
 
-def test():
+def test(spi=3, cs='PB0'):
     print("SPI flash")
-    cs = Pin('PB0', Pin.OUT)
-    spi = SPI(3, baudrate=42000000, polarity=0, phase=0)
+    cs = Pin(cs, Pin.OUT)
+    spi = SPI(spi, baudrate=42000000, polarity=0, phase=0)
     flash = SPIFlash(spi, cs)
 
     print("Getting chip ID...")
