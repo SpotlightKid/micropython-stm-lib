@@ -29,9 +29,9 @@ def test():
     addr = 524288
     print("Erasing 4k block at address {}...".format(addr))
     t1 = micros()
-    flash.erase('4k', addr)
-    # flash.erase('32k', addr)
-    # flash.erase('64k', addr)
+    flash.erase(addr, '4k')
+    # flash.erase(addr, '32k')
+    # flash.erase(addr, '64k')
     # flash.erase_chip()
     t = micros() - t1
     print("erase {} us".format(t))
