@@ -46,8 +46,8 @@ ACCEL_THRESHOLD = const(5)
 
 
 class Encoder(object):
-    def __init__(self, pin_clk, pin_dt, pin_mode=None, clicks=1,
-                 min_val=0, max_val=100, accel=0, reverse=False, init_val=0):
+    def __init__(self, pin_clk, pin_dt, pin_mode=None, clicks=1, init_val=0,
+                 min_val=0, max_val=100, accel=0, reverse=False):
         self.pin_clk = (pin_clk if isinstance(pin_clk, Pin) else
                         Pin(pin_clk, Pin.IN, pin_mode))
         self.pin_dt = (pin_dt if isinstance(pin_dt, Pin) else
