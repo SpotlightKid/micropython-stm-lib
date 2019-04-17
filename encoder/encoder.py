@@ -95,8 +95,8 @@ class Encoder(object):
     def value(self):
         return self._value // self.clicks
 
-    def reset(self):
-        self._value = 0
+    def reset(selfm value=0):
+        self._value = value
 
 
 def test(enc=None, **kwargs):
