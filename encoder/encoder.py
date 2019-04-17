@@ -47,7 +47,7 @@ ACCEL_THRESHOLD = const(5)
 
 class Encoder(object):
     def __init__(self, pin_clk, pin_dt, pin_mode=None, clicks=1,
-                 min_val=0, max_val=100, accel=0, reverse=False):
+                 min_val=0, max_val=100, accel=0, reverse=False, init_val=0):
         self.pin_clk = (pin_clk if isinstance(pin_clk, Pin) else
                         Pin(pin_clk, Pin.IN, pin_mode))
         self.pin_dt = (pin_dt if isinstance(pin_dt, Pin) else
@@ -62,7 +62,7 @@ class Encoder(object):
 
         # The following variables are assigned to in the interrupt callback,
         # so we have to allocate them here.
-        self._value = 0
+        self._value = init_val
         self._readings = 0
         self._state = 0
         self.cur_accel = 0
