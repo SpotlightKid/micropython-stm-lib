@@ -95,7 +95,7 @@ class Encoder(object):
     def value(self):
         return self._value // self.clicks
 
-    def reset(selfm value=0):
+    def reset(self, value=0):
         self._value = value
 
 
