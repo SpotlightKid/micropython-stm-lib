@@ -17,6 +17,8 @@ Currently, this collection contains:
   controller, including examples.
 * [midi](midi/) - a library for receiving and sending MIDI data via the UARTs
   or the USB virtual serial interface, including examples.
+* [mrequests](mrequest/) - a variant of `urequests` from `micropython-lib` with
+  a few extensions.
 * [picoredis](picoredis/) - A very mimimal Redis client library (not only) for
   MicroPython.
 * [spiflash](spiflash/) - A module for using Winbond W25Q* SPI-attached flash
