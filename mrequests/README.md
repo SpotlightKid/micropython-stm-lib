@@ -18,11 +18,13 @@ extensions:
 Otherwise the API remains the same.
 
 
-## Example
+## Examples
+
+
+### Simple GET request with JSON response
 
 ```py
 >>> import mrequests as requests
-
 >>> r = requests.get("http://httpbin.org/get",
                      headers={"Accept": "application/json"})
 >>> print(r)
@@ -54,6 +56,22 @@ It is mandatory to close response objects as soon as you finished working with
 them. On MicroPython platforms without full-fledged OS, not doing so may lead
 to resource leaks and malfunction.
 
+
+### HTTP Basic Auth
+
+```py
+>>> import mrequests as requests
+>>> user = "joedoe"
+>>> password = "simsalabim"
+>>> url = "http://httpbin.org/basic-auth/%s/%s" % (user, password)
+>>> r = requests.get(url, auth=(user, password))
+>>> print(r.text)
+{
+  "authenticated": true,
+  "user": "joedoe"
+}
+>>> r.close()
+```
 
 [micropython-lib]: https://github.com/micropython/micropython-lib
 [urequests]: https://github.com/micropython/micropython-lib/blob/master/urequests/urequests.py
