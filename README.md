@@ -4,26 +4,26 @@ MicroPython-STM-Lib
 A collection of Python modules and examples for [MicroPython], targeted mainly
 at STM32F4-based boards, like the [STM32F4DISCOVERY] board or the original
 [pyboard]. Most modules also work on the MicroPython unix port or even other
-bare-metal ports, e.g. the *esp8266* port.
+bare-metal ports, e.g. the *esp8266* or *esp32* port.
 
 Currently, this collection contains:
 
-* [accel](accel/) - a fixed version of [staccel.py] from the main MicroPython
+* [accel](./accel/) - a fixed version of [staccel.py] from the main MicroPython
   repoincluding examples.
-* [encoder](encoder/) - a library for reading a rotary encoder connected to
+* [encoder](./encoder/) - a library for reading a rotary encoder connected to
   two digital input pins, including examples. Features gray code error
   checking, making software or hardware debouncing uneccessary in most cases.
-* [lcd](lcd/) - a library for interfacing with a HD44780-compatible LCD
+* [lcd](./lcd/) - a library for interfacing with a HD44780-compatible LCD
   controller, including examples.
 * [midi](midi/) - a library for receiving and sending MIDI data via the UARTs
   or the USB virtual serial interface, including examples.
-* [mrequests](mrequest/) - a variant of `urequests` from `micropython-lib` with
-  a few extensions.
-* [picoredis](picoredis/) - A very mimimal Redis client library (not only) for
-  MicroPython.
-* [spiflash](spiflash/) - A module for using Winbond W25Q* SPI-attached flash
+* [mrequests](./mrequests/) - a variant of `urequests` from `micropython-lib`
+  with a few extensions.
+* [picoredis](./picoredis/) - A very mimimal Redis client library (not only)
+  for MicroPython.
+* [spiflash](./spiflash/) - A module for using Winbond W25Q* SPI-attached flash
   memory chips with MicroPython (adapted from code found in [this repo]).
-* [spimaster](spimaster/) - a rudmentary library to communicate via SPI with
+* [spimaster](./spimaster/) - a rudmentary library to communicate via SPI with
   an ESP826 module as the SPI slave, which runs an Arduino sketch using the
   [SPISlave] library.
 
