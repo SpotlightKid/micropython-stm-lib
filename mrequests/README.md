@@ -1,11 +1,12 @@
 # mrequests
 
-This is a variant of the [urequests] module from [micropython-lib] with a few
+This is an evolution of the [urequests] module from [micropython-lib] with a few
 extensions:
 
 
 ## Features
 
+* Supports redirection with absolute and relative URLs (see below for details).
 * Response headers can optionally be saved in the response object.
 * The `Response` class for response objects can be substituted by a custom
   response class.
@@ -16,6 +17,23 @@ extensions:
   a file, reading the response data and writing the file in small chunks.
 
 Otherwise the API remains the same.
+
+
+### Redirection Support
+
+* Can follow redirects for response status codes 301, 302, 303, 307 and 308.
+* The HTTP method is changed to `GET` for redirects, unless the original
+  method was `HEAD` or the status code is 307 or 308.
+* For status code 303, if the original method is `GET`, the redirection is not
+  followed, since the `Location` header is supposed to indicate a non-HTTP
+  resource then.
+* Redirects are allowed to change the protocol from `http` to `https`,
+  but redirects changing from `https` to `http` will not be followed.
+* The `request` function has an additional keyword argument `max_redirects`,
+  defaulting to 1, which controls how many level of redirections are followed.
+  If this is exceeded, the function raises a `ValueError`.
+* The code does not check for infinite redirection cycles. It is advised to
+  keep `max_redirects` to a low number instead.
 
 
 ## Examples
