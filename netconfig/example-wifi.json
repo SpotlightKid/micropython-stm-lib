@@ -1,0 +1,7 @@
+{
+    "ssid": "My WLAN",
+    "password": "XXXXXXXX",
+    "use_default": 1,
+    "timeout_default_config": 3,
+    "timeout": 8
+}
