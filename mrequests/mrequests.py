@@ -192,14 +192,20 @@ class Response:
 
         self.close()
 
-    def add_header(self, line):
-        if line[:18].lower() == b"transfer-encoding:" and b"chunked" in line:
+    def _parse_header(self, data):
+        if data[:18].lower() == b"transfer-encoding:" and b"chunked" in data:
             self.chunked = True
-        elif line[:15].lower() == b"content-length:":
-            self._content_size = int(line.split(b":", 1)[1])
+            # print("Chunked response detected.")
+        elif data[:15].lower() == b"content-length:":
+            self._content_size = int(data.split(b":", 1)[1])
+            # print("Content length: %i" % self._content_size)
+
+    # overwrite this method, if you want to process/store headers differently
+    def add_header(self, data):
+        self._parse_header(data)
 
         if self.headers is not None:
-            self.headers.append(line)
+            self.headers.append(data)
 
     def close(self):
         if not MICROPY:
