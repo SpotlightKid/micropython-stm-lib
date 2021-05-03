@@ -128,9 +128,9 @@ class RequestContext:
 
 
 class Response:
-    def __init__(self, f, save_headers=False):
-        self.raw = f
-        self._sf = None
+    def __init__(self, sock, sockfile, save_headers=False):
+        self.sock = sock
+        self.sf = sockfile
         self.encoding = "utf-8"
         self._cached = None
         self._chunk_size = 0
@@ -140,17 +140,10 @@ class Response:
         self.reason = ""
         self.headers = [] if save_headers else None
 
-    def makefile(self, mode):
-        if self._sf is None:
-            self._sf = self.raw.makefile(mode)
-        return self._sf
-
     def read(self, size=MAX_READ_SIZE):
-        sf = self.makefile("rb")
-
         if self.chunked:
             if self._chunk_size == 0:
-                l = sf.readline()
+                l = self.sf.readline()
                 # print("Chunk line:", l)
                 l = l.split(b";", 1)[0]
                 self._chunk_size = int(l, 16)
@@ -164,20 +157,20 @@ class Response:
 
                     return b""
 
-            data = sf.read(min(size, self._chunk_size))
+            data = self.sf.read(min(size, self._chunk_size))
             self._chunk_size -= len(data)
 
             if self._chunk_size == 0:
-                sep = sf.read(2)
+                sep = self.sf.read(2)
                 if sep != b"\r\n":
                     raise ValueError("Expected chunk separator, read %r instead" % sep)
 
             return data
         else:
             if size:
-                return sf.read(size)
+                return self.sf.read(size)
             else:
-                return sf.read(self._content_size)
+                return self.sf.read(self._content_size)
 
     def save(self, fn, chunk_size=1024):
         read = 0
@@ -209,13 +202,12 @@ class Response:
             self.headers.append(line)
 
     def close(self):
-        if self._sf:
-            if not MICROPY:
-                self._sf.close()
-            self._sf = None
-        if self.raw:
-            self.raw.close()
-            self.raw = None
+        if not MICROPY:
+            self.sf.close()
+            self.sf = None
+        if self.sock:
+            self.sock.close()
+            self.sock = None
         self._cached = None
 
     @property
@@ -224,8 +216,8 @@ class Response:
             try:
                 self._cached = self.read(size=None)
             finally:
-                self.raw.close()
-                self.raw = None
+                self.sock.close()
+                self.sock = None
         return self._cached
 
     @property
@@ -279,9 +271,17 @@ def request(
                 except ImportError:
                     import ussl as ssl
 
-                sock = ssl.wrap_socket(sock, server_hostname=host)
+                create_ctx = getattr(ssl, 'create_default_context', None)
+                if create_ctx:
+                    sock = create_ctx().wrap_socket(sock, server_hostname=ctx.host)
+                else:
+                    sock = ssl.wrap_socket(sock, server_hostname=ctx.host)
 
-            sf = sock.makefile("rwb" if MICROPY else "wb")
+            if not MICROPY:
+                sf = sock.makefile("rwb")
+            else:
+                sf = sock
+
             sf.write(b"%s %s HTTP/1.1\r\n" % (ctx.method.encode("ascii"), ctx.path.encode("ascii")))
 
             if not b"Host" in headers:
@@ -308,10 +308,9 @@ def request(
                 sf.write(data if isinstance(data, bytes) else data.encode(encoding or "utf-8"))
 
             if not MICROPY:
-                sf.close()
-                sf = sock.makefile("rb")
+                sf.flush()
 
-            resp = response_class(sock, save_headers=save_headers)
+            resp = response_class(sock, sf, save_headers=save_headers)
             l = b""
             i = 0
             while True:
@@ -338,9 +337,6 @@ def request(
 
                 # print("Header: %r" % l)
                 resp.add_header(l)
-
-            if not MICROPY:
-                sf.close()
         except OSError:
             sock.close()
             raise
