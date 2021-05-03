@@ -1,22 +1,50 @@
 # mrequests
 
 This is an evolution of the [urequests] module from [micropython-lib] with a few
-extensions:
+extensions and many fixes and convenience features.
 
 
-## Features
+## Features & Limitations
+
+### Features
 
 * Supports redirection with absolute and relative URLs (see below for details).
 * Response headers can optionally be saved in the response object.
 * The `Response` class for response objects can be substituted by a custom
   response class.
 * Support for HTTP basic auth (requires `ubinascii` module).
-* Support for responses with chunked transfer encoding.
 * Respects `Content-length` header in response.
+* Support for responses with chunked transfer encoding.
 * `Response` objects have a `save` method to save the response body to
   a file, reading the response data and writing the file in small chunks.
 
-Otherwise the API remains the same.
+
+### Limitations
+
+- URL parsing does not cover all corner cases.
+- URLs with authentication credentials in the host part (e.g.
+  `http://user:secret@myhost/`) are *not supported*. Pass authentication
+  credentials separately via the `auth` argument instead.
+- SSL/TLS support on the MicroPython *unix* and *esp8266* ports is limited. In
+  particular their `ssl` module does not support all encryption schemes
+  commonly in use by popular servers, meaning that trying to connect to them
+  via HTTPS will fail.
+- The code is *not* interrupt save and a fair amount of memory allocation is
+  happening in the process of handling a request.
+- Request and JSON data may be passed in as bytes or strings and the request
+  data will be encoded to bytes, if necessary, using the encoding given with
+  the `encoding` parameter. But be aware that encodings other than `utf-8` are
+  *not supported* by any currently known MicroPython implementation.
+- Custom headers may be passed as a dictionary with string or bytes keys and
+  values and must contain only ASCII chars. If you need header values to use
+  non-ASCII chars, you need to encode them according to RFC 8187.
+- The URL and specifically any query string parameters it contains will not be
+  URL-encoded, and it may contain only ASCII chars. Make sure you encode the
+  query string part of the URL with `urlencode.quote` before passing it, if
+  necessary.
+- When encoding `str` instances via `urlencode.urlencode` or `urlencode.quote`,
+  the `encoding` and `errors` arguments are currently ignored by MicroPython and
+  it behaves as if their values were `"utf-8"` resp. `"ignore"`.
 
 
 ### Redirection Support
