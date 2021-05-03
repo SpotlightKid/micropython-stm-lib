@@ -265,11 +265,14 @@ def request(
 
         ctx.redirect = False
 
+        # print("Resolving host address...")
         ai = socket.getaddrinfo(ctx.host, ctx.port, 0, socket.SOCK_STREAM)
         ai = ai[0]
 
+        # print("Creating socket...")
         sock = socket.socket(ai[0], ai[1], ai[2])
         try:
+            # print("Connecting to %s:%i..." % (ctx.host, ctx.port))
             sock.connect(ai[-1])
             if ctx.scheme == "https":
                 try:
@@ -277,6 +280,7 @@ def request(
                 except ImportError:
                     import ussl as ssl
 
+                # print("Wrapping socket with SSL")
                 create_ctx = getattr(ssl, 'create_default_context', None)
                 if create_ctx:
                     sock = create_ctx().wrap_socket(sock, server_hostname=ctx.host)
