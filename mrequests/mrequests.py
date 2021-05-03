@@ -1,4 +1,4 @@
-"""A HTTP client module for MicroPython with and PAI similar to requests."""
+"""A HTTP client module for MicroPython with an API similar to requests."""
 
 import sys
 
