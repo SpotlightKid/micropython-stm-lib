@@ -42,11 +42,15 @@ PIN_RST = "A3"
 PIN_SS = "A4"
 
 
-def connect(configfile):
+def connect(configfile, reconfigure=False):
     """Try to connect to an Ethernet or WiFi network.
 
     Reads the network configuration (interface, IP config, SSID, password,
     etc.) from the JSON file specified with the `configfile` argument.
+
+    If the network interface is not already connected or if the `reconfigure`
+    argument is True, it sets up the network according to the settings in that
+    file.
 
     Returns the network interface object instance.
 
@@ -141,7 +145,7 @@ def connect(configfile):
 
     ip_config = config.get("ip_config", IP_CONFIG).lower()
 
-    if not net_if.isconnected():
+    if reconfigure or not net_if.isconnected():
         if ip_config == "static":
             print("Setting static IP network configuration.")
             net_if.ifconfig(
