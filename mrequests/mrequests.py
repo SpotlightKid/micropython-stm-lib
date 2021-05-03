@@ -245,7 +245,7 @@ def request(
     json=None,
     headers={},
     auth=None,
-    stream=None,
+    encoding=None,
     response_class=Response,
     save_headers=False,
     max_redirects=1,
@@ -282,28 +282,30 @@ def request(
                 sock = ssl.wrap_socket(sock, server_hostname=host)
 
             sf = sock.makefile("rwb" if MICROPY else "wb")
-            sf.write(b"%s %s HTTP/1.1\r\n" % (ctx.method.encode(), ctx.path.encode("utf-8")))
+            sf.write(b"%s %s HTTP/1.1\r\n" % (ctx.method.encode("ascii"), ctx.path.encode("ascii")))
 
             if not b"Host" in headers:
                 sf.write(b"Host: %s\r\n" % ctx.host.encode())
 
-            # Iterate over keys to avoid tuple alloc
-            for k in headers:
-                sf.write(k)
+            for k, val in headers.items():
+                sf.write(k if isinstance(k, bytes) else k.encode('ascii'))
                 sf.write(b": ")
-                sf.write(headers[k])
+                sf.write(val if isinstance(val, bytes) else val.encode('ascii'))
                 sf.write(b"\r\n")
 
             if data and ctx.method not in ("GET", "HEAD"):
                 if json is not None:
-                    sf.write(b"Content-Type: application/json\r\n")
+                    sf.write(b"Content-Type: application/json")
+                    if encoding:
+                        sf.write(b"; charset=%s" % encoding.encode())
+                    sf.write(b"\r\n")
 
                 sf.write(b"Content-Length: %d\r\n" % len(data))
 
             sf.write(b"Connection: close\r\n\r\n")
 
             if data and ctx.method not in ("GET", "HEAD"):
-                sf.write(data)
+                sf.write(data if isinstance(data, bytes) else data.encode(encoding or "utf-8"))
 
             if not MICROPY:
                 sf.close()
