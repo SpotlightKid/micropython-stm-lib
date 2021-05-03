@@ -92,7 +92,7 @@ class RequestContext:
 
     @property
     def url(self):
-        return "{}://{}{}".format(
+        return "%s://%s%s" % (
             self.scheme,
             self.host if self._port is None else (self.host + ":" + self.port),
             self.path,
