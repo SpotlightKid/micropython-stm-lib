@@ -25,10 +25,10 @@ extensions and many fixes and convenience features.
 - URLs with authentication credentials in the host part (e.g.
   `http://user:secret@myhost/`) are *not supported*. Pass authentication
   credentials separately via the `auth` argument instead.
-- SSL/TLS support on the MicroPython *unix* and *esp8266* ports is limited. In
-  particular their `ssl` module does not support all encryption schemes
-  commonly in use by popular servers, meaning that trying to connect to them
-  via HTTPS will fail.
+- SSL/TLS support on the MicroPython *unix*, *stm32* and *esp8266* ports is
+  limited. In particular their `ssl` module does not support all encryption
+  schemes commonly in use by popular servers, meaning that trying to connect
+  to them via HTTPS will fail with various cryptic error messages.
 - The code is *not* interrupt save and a fair amount of memory allocation is
   happening in the process of handling a request.
 - Request and JSON data may be passed in as bytes or strings and the request
