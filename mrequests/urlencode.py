@@ -79,7 +79,7 @@ def quote(string, safe="/", encoding=None, errors=None):
             encoding = "utf-8"
         if errors is None:
             errors = "strict"
-        string = string.encode(encoding, errors)
+        string = bytes(string, encoding, errors)
     else:
         if encoding is not None:
             raise TypeError("quote() doesn't support 'encoding' for bytes")
