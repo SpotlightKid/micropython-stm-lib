@@ -68,6 +68,7 @@ extensions and many fixes and convenience features.
 
 ## Examples
 
+See the scripts in the [examples](./examples) directory for more.
 
 ### Simple GET request with JSON response
 
