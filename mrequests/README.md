@@ -11,10 +11,10 @@ extensions and many fixes and convenience features.
 ### Features
 
 * Supports redirection with absolute and relative URLs (see below for details).
+* Support for HTTP basic auth (requires `ubinascii` module).
 * Response headers can optionally be saved in the response object.
 * The `Response` class for response objects can be substituted by a custom
   response class.
-* Support for HTTP basic auth (requires `ubinascii` module).
 * Respects `Content-length` header in response.
 * Support for responses with chunked transfer encoding.
 * `Response` objects have a `save` method to save the response body to
@@ -23,7 +23,10 @@ extensions and many fixes and convenience features.
 
 ### Limitations
 
-- URL parsing does not cover all corner cases.
+- `mrequests.request` is a synchroneous, blocking function.
+- The code is *not* interrupt save and a fair amount of memory allocation is
+  happening in the process of handling a request.
+- URL parsing does not cover all corner cases (see [test_urlparse] for details).
 - URLs with authentication credentials in the host part (e.g.
   `http://user:secret@myhost/`) are *not supported*. Pass authentication
   credentials separately via the `auth` argument instead.
@@ -31,12 +34,10 @@ extensions and many fixes and convenience features.
   limited. In particular their `ssl` module does not support all encryption
   schemes commonly in use by popular servers, meaning that trying to connect
   to them via HTTPS will fail with various cryptic error messages.
-- The code is *not* interrupt save and a fair amount of memory allocation is
-  happening in the process of handling a request.
 - Request and JSON data may be passed in as bytes or strings and the request
   data will be encoded to bytes, if necessary, using the encoding given with
   the `encoding` parameter. But be aware that encodings other than `utf-8` are
-  *not supported* by any currently known MicroPython implementation.
+  *not supported* by most (any?) MicroPython implementations.
 - Custom headers may be passed as a dictionary with string or bytes keys and
   values and must contain only ASCII chars. If you need header values to use
   non-ASCII chars, you need to encode them according to RFC 8187.
@@ -124,4 +125,5 @@ to resource leaks and malfunction.
 
 [micropython-lib]: https://github.com/micropython/micropython-lib
 [requests]: https://github.com/psf/requests
+[test_urlparse]: ./tests/test_urlparse.py
 [urequests]: https://github.com/micropython/micropython-lib/blob/master/urequests/urequests.py
