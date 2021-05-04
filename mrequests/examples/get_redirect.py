@@ -9,6 +9,7 @@ To run this, first start the httpbin server:
 import sys
 import mrequests as requests
 
+
 print("Running on platform:", sys.platform)
 
 host = 'http://localhost/'

@@ -1,7 +1,7 @@
 import mrequests as requests
 
 
-host = 'http://localhost/'
+host = 'http://httpbin.org/'
 url = host + "get"
 r = requests.get(url, headers={"Accept": "application/json"})
 print(r)
