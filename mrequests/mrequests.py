@@ -136,7 +136,7 @@ class Response:
         self._chunk_size = 0
         self._content_size = 0
         self.chunked = False
-        self.status = None
+        self.status_code = None
         self.reason = ""
         self.headers = [] if save_headers else None
 
@@ -332,7 +332,7 @@ def request(
 
             # print("Response: %s" % l.decode("ascii"))
             l = l.split(None, 2)
-            resp.status = int(l[1])
+            resp.status_code = int(l[1])
 
             if len(l) > 2:
                 resp.reason = l[2].rstrip()
@@ -343,7 +343,7 @@ def request(
                     break
 
                 if l.startswith(b"Location:"):
-                    ctx.set_location(resp.status, l[9:].strip().decode("ascii"))
+                    ctx.set_location(resp.status_code, l[9:].strip().decode("ascii"))
 
                 # print("Header: %r" % l)
                 resp.add_header(l)

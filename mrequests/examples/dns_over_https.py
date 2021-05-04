@@ -20,8 +20,8 @@ def gethostbyname(name):
         "https://{}{}?{}".format(DOH_IP, DOH_PATH, params),
         headers=headers
     )
-# ~    print(req.status_code)
-    if req.status == 200:
+    # print("Status code:", r.status_code)
+    if req.status_code == 200:
         reply = req.json()
     else:
         reply = {}

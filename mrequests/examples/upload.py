@@ -57,10 +57,10 @@ if __name__ == '__main__':
 
     resp = upload_file(url, filename, **data)
 
-    if resp.status in (200, 204):
+    if resp.status_code in (200, 204):
         print("Sucessfully uploaded file '%s'." % filename)
         print(resp.text)
     else:
-        print('Upload failed: %s %s' % (resp.status, resp.reason.decode()))
+        print('Upload failed: %s %s' % (resp.status_code, resp.reason.decode()))
 
     resp.close()
