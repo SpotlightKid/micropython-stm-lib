@@ -10,7 +10,7 @@ TEST_CASES = [
     ("/foo/bar#spamm", (None, None, None, "/foo/bar#spamm")),
     ("/foo#spamm", (None, None, None, '/foo#spamm')),
     ("http://host/", ("http", "host", None, '/')),
-    ("http://host", ("http:", "host", None, '/')),
+    ("http://host", ("http", "host", None, '/')),
 ]
 
 
