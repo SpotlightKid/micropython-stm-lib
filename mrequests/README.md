@@ -55,9 +55,10 @@ extensions and many fixes and convenience features.
 * Can follow redirects for response status codes 301, 302, 303, 307 and 308.
 * The HTTP method is changed to `GET` for redirects, unless the original
   method was `HEAD` or the status code is 307 or 308.
-* For status code 303, if the original method is `GET`, the redirection is not
-  followed, since the `Location` header is supposed to indicate a non-HTTP
-  resource then.
+* For status code 303, if the method of the request resulting in a redirection
+  (which may have been the result of a previous redirection) is `GET`, the
+  redirection is not followed, since the `Location` header is supposed to
+  indicate a non-HTTP resource then.
 * Redirects are allowed to change the protocol from `http` to `https`,
   but redirects changing from `https` to `http` will not be followed.
 * The `request` function has an additional keyword argument `max_redirects`,

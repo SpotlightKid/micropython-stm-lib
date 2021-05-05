@@ -94,7 +94,7 @@ class RequestContext:
     def url(self):
         return "%s://%s%s" % (
             self.scheme,
-            self.host if self._port is None else (self.host + ":" + self.port),
+            self.host if self._port is None else ("%s:%s" % (self.host, self.port)),
             self.path,
         )
 
@@ -118,13 +118,12 @@ class RequestContext:
                 self.scheme = scheme
             if host:
                 self.host = host
-            if port is not None:
-                self.port = port
+                self._port = port
 
             if path.startswith("/"):
                 self.path = path
             else:
-                self.path = self.path.rsplit("/")[0] + "/" + path
+                self.path = self.path.rsplit("/", 1)[0] + "/" + path
 
 
 class Response:
