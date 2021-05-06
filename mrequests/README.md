@@ -68,6 +68,35 @@ extensions and many fixes and convenience features.
   keep `max_redirects` to a low number instead.
 
 
+## Installation
+
+Make sure you have `mpy-cross` and `rshell` installed and in your shell's
+`PATH`.
+
+For boards with the `stm32` port:
+
+    DESTDIR=/flash ./install.sh
+
+For boards with the `esp8266` or `esp32` port:
+
+    DESTDIR=/pyboard PORT=/dev/ttyUSB0 BAUD=115200 ./install.sh
+
+This will compile the Python modules with `mpy-cross` and copy the resulting
+`.mpy` files to the board's flash.
+
+For the `unix` port, just copy all the `.py` files in the root of the
+repository to a directory, which is in `sys.path`, e.g. `~/.micropython/lib`
+of or set the `MICROPYPATH` environment variable to a colon-separated list of
+directories including the one to which you copied the modules.
+
+Note: the `mrequests.py` module has no dependencies besides modules usually
+already built in to the MicroPython firmware on all ports (as of version 1.15)
+and can be installed and used on its own. `defaultdict.py` and `urlencode.py`
+provide support for sending form-encoded request parameters or data (see the
+`formencode.py` script in the `examples` directory for an example of their
+use).
+
+
 ## Examples
 
 See the scripts in the [examples](./examples) directory for more.
