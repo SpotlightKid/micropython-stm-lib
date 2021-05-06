@@ -1,6 +1,6 @@
 {
     "interface": "wiznet",
-    "ip_config": "static"
+    "ip_config": "static",
     "spi_bus": 1,
     "pin_rst": "A3",
     "pin_ss": "A4",
