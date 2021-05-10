@@ -246,6 +246,7 @@ def request(
     response_class=Response,
     save_headers=False,
     max_redirects=1,
+    timeout=None,
 ):
     if auth:
         headers.update(auth if callable(auth) else encode_basic_auth(auth[0], auth[1]))
@@ -270,6 +271,7 @@ def request(
 
         # print("Creating socket...")
         sock = socket.socket(ai[0], ai[1], ai[2])
+        sock.settimeout(timeout)
         try:
             # print("Connecting to %s:%i..." % (ctx.host, ctx.port))
             sock.connect(ai[-1])
