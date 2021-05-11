@@ -8,6 +8,19 @@ extensions and many fixes and convenience features.
 
 ## Features & Limitations
 
+
+### Compatibility
+
+Supports the unix, stm32, esp8266 and esp32 MicroPython ports as well as
+CPython.
+
+On the unix, stm32 and esp8266 ports the SSL/TLS support has some limitations
+due to problems with MicroPython's `ssl` module on these platforms.
+
+On the stm32 port installing a custom-compiled firmware with network/SSL
+support is required.
+
+
 ### Features
 
 * Supports redirection with absolute and relative URLs (see below for details).
