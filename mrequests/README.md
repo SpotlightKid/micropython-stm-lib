@@ -11,14 +11,15 @@ extensions and many fixes and convenience features.
 ### Features
 
 * Supports redirection with absolute and relative URLs (see below for details).
-* Support for HTTP basic auth (requires `ubinascii` module).
+* Supports HTTP basic authentication (requires `ubinascii` module).
+* Supports socket timeouts.
 * Response headers can optionally be saved in the response object.
-* The `Response` class for response objects can be substituted by a custom
-  response class.
 * Respects `Content-length` header in response.
-* Support for responses with chunked transfer encoding.
+* Supports responses with chunked transfer encoding.
 * `Response` objects have a `save` method to save the response body to
   a file, reading the response data and writing the file in small chunks.
+* The `Response` class for response objects can be substituted by a custom
+  response class.
 
 
 ### Limitations
