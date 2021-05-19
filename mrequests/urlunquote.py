@@ -1,8 +1,12 @@
 def unquote(string):
-    """unquote4('abc%20def') -> b'abc def'.
+    """Decode and replace URL percent-escapes in string.
 
-    Note: string is encoded as UTF-8. This is only an issue if it contains
-    unescaped non-ASCII characters, which URIs should not.
+        unquote('abc%20def') -> b'abc def'.
+
+    Note: If a string, not a bytes object, is passed, it is encoded as UTF-8.
+    This is only an issue if it contains unescaped non-ASCII characters, which
+    URIs should not.
+
     """
     if not string:
         return b''
