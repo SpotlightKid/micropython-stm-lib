@@ -1,6 +1,6 @@
 """Sets up network on MicroPython board with Wiznet 5500 ethernet adapter attached via SPI.
 
-This uses the netconfig_ module from my ``micropythonstm-lib``.
+This uses the netconfig_ module from my ``micropython-stm-lib``.
 
 To compile the MicroPython ``stm32`` port with support for the Wiznet 5500 adapter,
 add the following to ``mpconfigboard.mk`` in your board definition::
