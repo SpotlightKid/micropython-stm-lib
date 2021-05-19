@@ -178,7 +178,7 @@ class Response:
             while True:
                 remain = self._content_size - read
 
-                if remain == 0:
+                if remain <= 0:
                     break
 
                 chunk = self.read(min(chunk_size, remain))
