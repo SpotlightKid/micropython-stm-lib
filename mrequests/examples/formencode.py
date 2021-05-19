@@ -14,6 +14,14 @@ def request(method, url, data=None, json=None, headers=None, encoding=None):
 if __name__ == "__main__":
     import sys
 
-    url = "http://httpbin.org/post"
+    host = "http://httpbin.org/"
+    url = host + "post"
     data = dict((arg.split("=") for arg in sys.argv[1:]))
-    print(request("POST", url, data=data).json())
+    r = request("POST", url, data=data)
+
+    if r.status_code == 200:
+        print(r.json())
+    else:
+        print("Request failed. Status: {}".format(r.status_code))
+
+    r.close()

@@ -12,7 +12,8 @@ import mrequests as requests
 
 print("Running on platform:", sys.platform)
 
-host = 'http://localhost/'
+#host = 'http://httpbin.org/'
+host = "http://localhost/"
 base_url = host + "redirect/"
 
 url = base_url + "1"
