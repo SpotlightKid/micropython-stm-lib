@@ -290,11 +290,7 @@ def request(
                 else:
                     sock = ssl.wrap_socket(sock, server_hostname=ctx.host)
 
-            if not MICROPY:
-                sf = sock.makefile("rwb")
-            else:
-                sf = sock
-
+            sf = sock if MICROPY else sock.makefile("rwb")
             sf.write(b"%s %s HTTP/1.1\r\n" % (ctx.method.encode("ascii"), ctx.path.encode("ascii")))
 
             if not b"Host" in headers:
