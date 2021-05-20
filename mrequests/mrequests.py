@@ -194,7 +194,7 @@ class Response:
         self.close()
 
     def _parse_header(self, data):
-        if data[:18].lower() == b"transfer-encoding:" and b"chunked" in data:
+        if data[:18].lower() == b"transfer-encoding:" and b"chunked" in data[18:]:
             self.chunked = True
             # print("Chunked response detected.")
         elif data[:15].lower() == b"content-length:":
