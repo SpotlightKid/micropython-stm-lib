@@ -7,6 +7,7 @@ try:
 except ImportError:
     import usocket as socket
 
+
 MICROPY = sys.implementation.name == "micropython"
 MAX_READ_SIZE = 4 * 1024
 
@@ -84,7 +85,7 @@ class RequestContext:
         self.method = method or "GET"
         self.scheme, self.host, self._port, self.path = parse_url(url)
         if not self.scheme or not self.host:
-            raise ValueError("An absolute is URL required.")
+            raise ValueError("An absolute URL is required.")
 
     @property
     def port(self):
@@ -144,6 +145,7 @@ class Response:
             if self._chunk_size == 0:
                 l = self.sf.readline()
                 # print("Chunk line:", l)
+                # ignore chunk extensions
                 l = l.split(b";", 1)[0]
                 self._chunk_size = int(l, 16)
                 # print("Chunk size:", self._chunk_size)
@@ -152,7 +154,7 @@ class Response:
                     # End of message
                     sep = sf.read(2)
                     if sep != b"\r\n":
-                        raise ValueError("Expected final chunk separator, read %r instead" % sep)
+                        raise ValueError("Expected final chunk separator, read %r instead." % sep)
 
                     return b""
 
@@ -162,7 +164,7 @@ class Response:
             if self._chunk_size == 0:
                 sep = self.sf.read(2)
                 if sep != b"\r\n":
-                    raise ValueError("Expected chunk separator, read %r instead" % sep)
+                    raise ValueError("Expected chunk separator, read %r instead." % sep)
 
             return data
         else:
