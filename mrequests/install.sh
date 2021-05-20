@@ -2,7 +2,7 @@
 #
 # Install mrequests to a MicroPython board
 
-MODULES=('defaultdict.py' 'mrequests.py' 'urlencode.py' 'urlunquote.py')
+MODULES=('defaultdict.py' 'mrequests.py' 'urlencode.py' 'urlparseqs.py' 'urlunquote.py')
 
 for py in ${MODULES[*]}; do
     echo "Compiling $py to ${py%.*}.mpy"
