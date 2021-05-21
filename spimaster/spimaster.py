@@ -30,26 +30,26 @@ from pyb import Pin, SPI
 class SpiMaster:
     def __init__(self, bus=1, baudrate=328125, polarity=0, phase=0, ss='A4'):
         self.ss = Pin(ss, Pin.OUT)
-        self.ss.high()
+        self.ss(1)
         self.spi = SPI(bus, SPI.MASTER, baudrate=baudrate, polarity=polarity,
                        phase=phase)
         self.msgbuf = bytearray(32)
         self.status = bytearray(4)
 
     def write_status(self, status):
-        self.ss.low()
+        self.ss(0)
         self.spi.send(0x01)
         self.spi.send(status & 0xFF)
         self.spi.send((status >> 8) & 0xFF)
         self.spi.send((status >> 16) & 0xFF)
         self.spi.send((status >> 24) & 0xFF)
-        self.ss.high()
+        self.ss(1)
 
     def read_status(self):
-        self.ss.low()
+        self.ss(0)
         self.spi.send(0x04)
         self.spi.recv(self.status)
-        self.ss.high()
+        self.ss(1)
         return (
             self.status[0] |
             (self.status[1] << 8) |
@@ -58,11 +58,11 @@ class SpiMaster:
         )
 
     def read_data(self):
-        self.ss.low()
+        self.ss(0)
         self.spi.send(0x03)
         self.spi.send(0x00)
         self.spi.recv(self.msgbuf)
-        self.ss.high()
+        self.ss(1)
         return self.msgbuf
 
     def read_msg(self, encoding='utf-8'):
@@ -70,11 +70,11 @@ class SpiMaster:
 
     def write_data(self, data):
         self.msgbuf[:] = data[:32] + b'\0' * (32 - len(data[:32]))
-        self.ss.low()
+        self.ss(0)
         self.spi.send(0x02)
         self.spi.send(0x00)
         self.spi.send(self.msgbuf)
-        self.ss.high()
+        self.ss(1)
 
 
 if __name__ == '__main__':
