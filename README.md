@@ -9,7 +9,7 @@ bare-metal ports, e.g. the *esp8266* or *esp32* port.
 Currently, this collection contains:
 
 * [accel](./accel/) - a fixed version of [staccel.py] from the main MicroPython
-  repoincluding examples.
+  repo including examples.
 * [encoder](./encoder/) - a library for reading a rotary encoder connected to
   two digital input pins, including examples. Features gray code error
   checking, making software or hardware debouncing uneccessary in most cases.
@@ -21,11 +21,11 @@ Currently, this collection contains:
   with improvements and new features.
 * [netconfig](./netconfig/) - simple WiFi or ethernet network setup from JSON
   configuration files.
-* [picoredis](./picoredis/) - A very mimimal Redis client library (not only)
+* [picoredis](./picoredis/) - a very mimimal Redis client library (not only)
   for MicroPython.
-* [spiflash](./spiflash/) - A module for using Winbond W25Q* SPI-attached flash
+* [spiflash](./spiflash/) - a module for using Winbond W25Q* SPI-attached flash
   memory chips with MicroPython (adapted from code found in [this repo]).
-* [spimaster](./spimaster/) - a rudmentary library to communicate via SPI with
+* [spimaster](./spimaster/) - a rudimentary library to communicate via SPI with
   an ESP826 module as the SPI slave, which runs an Arduino sketch using the
   [SPISlave] library.
 

@@ -45,7 +45,7 @@ support is required.
   `http://user:secret@myhost/`) are *not supported*. Pass authentication
   credentials separately via the `auth` argument instead.
 - SSL/TLS support on the MicroPython *unix*, *stm32* and *esp8266* ports is
-  limited. In particular their `ssl` module does not support all encryption
+  limited. In particular, their `ssl` module does not support all encryption
   schemes commonly in use by popular servers, meaning that trying to connect
   to them via HTTPS will fail with various cryptic error messages.
 - Request and JSON data may be passed in as bytes or strings and the request
@@ -62,6 +62,8 @@ support is required.
 - When encoding `str` instances via `urlencode.urlencode` or `urlencode.quote`,
   the `encoding` and `errors` arguments are currently ignored by MicroPython and
   it behaves as if their values were `"utf-8"` resp. `"ignore"`.
+- In responses using "chunked" transfer-encoding, chunk extensions and trailers
+  are ignored.
 
 
 ### Redirection Support
@@ -175,7 +177,7 @@ to resource leaks and malfunction.
 
 ## Reference
 
-The main function provided by `mrequests` is `requests`, which takes an HTTP
+The main function provided by `mrequests` is `request`, which takes an HTTP
 method and a URL as positional arguments and several optional keyword arguments
 and returns a `Response` object:
 
@@ -216,8 +218,8 @@ the request data. To avoid allocation, pass a JSON-encoded byte string with the
 
 *headers (dict)* - a dictionary of additional request headers to sent. Keys and
 values can by `bytes` or `str` instances and may contain only ASCII chars.
-`str` keys and values will be converted to `bytes` using the encoding given
-with the `encoding` parameter, which causes memory allocation.
+`str` keys and values will be converted to `bytes` using ASCII encoding, which
+causes memory allocation.
 
 A `Content-Length` header will always be added, using the length of the request
 data as the value. If no `Host` header was passed, one will be added, using the
