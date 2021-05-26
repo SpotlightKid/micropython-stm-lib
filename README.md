@@ -17,11 +17,11 @@ Currently, this collection contains:
   controller, including examples.
 * [midi](midi/) - a library for receiving and sending MIDI data via the UARTs
   or the USB virtual serial interface, including examples.
-* [mrequests](./mrequests/) - an evolution of `urequests` from `micropython-lib`
+* [mrequests] - an evolution of `urequests` from `micropython-lib`
   with improvements and new features.
 * [netconfig](./netconfig/) - simple WiFi or ethernet network setup from JSON
   configuration files.
-* [picoredis](./picoredis/) - a very mimimal Redis client library (not only)
+* [picoredis] - a very mimimal Redis client library (not only)
   for MicroPython.
 * [spiflash](./spiflash/) - a module for using Winbond W25Q* SPI-attached flash
   memory chips with MicroPython (adapted from code found in [this repo]).
@@ -46,6 +46,8 @@ under the [MIT License].
 
 [micropython]: http://micropython.org/
 [mit license]: http://opensource.org/licenses/MIT
+[mrequests]: https://github.com/SpotlightKid/mrequests/tree/master
+[picoredis]: https://github.com/SpotlightKid/picoredis/tree/master
 [pyboard]: https://store.micropython.org/#/products/PYBv1_1
 [spislave]: https://github.com/esp8266/Arduino/tree/master/libraries/SPISlave
 [staccel.py]: https://github.com/micropython/micropython/blob/master/ports/stm32/boards/STM32F4DISC/staccel.py
