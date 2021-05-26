@@ -28,6 +28,8 @@ Currently, this collection contains:
 * [spimaster](./spimaster/) - a rudimentary library to communicate via SPI with
   an ESP826 module as the SPI slave, which runs an Arduino sketch using the
   [SPISlave] library.
+* [untar](./untar/) - a very simple module to unpack an uncompressed tar
+  archive, using the [utarfile] module from [micropython-lib].
 
 
 Author
@@ -45,6 +47,7 @@ under the [MIT License].
 
 
 [micropython]: http://micropython.org/
+[micropython-lib]: https://github.com/micropython/micropython-lib
 [mit license]: http://opensource.org/licenses/MIT
 [mrequests]: https://github.com/SpotlightKid/mrequests/tree/master
 [picoredis]: https://github.com/SpotlightKid/picoredis/tree/master
@@ -53,3 +56,4 @@ under the [MIT License].
 [staccel.py]: https://github.com/micropython/micropython/blob/master/ports/stm32/boards/STM32F4DISC/staccel.py
 [stm32f4discovery]: http://www.st.com/web/catalog/tools/FM116/SC959/SS1532/PF252419
 [this repo]: https://github.com/manitou48/pyboard
+[utarfile]: https://github.com/micropython/micropython-lib/blob/master/utarfile/utarfile.py
