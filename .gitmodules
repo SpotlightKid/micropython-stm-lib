@@ -1,3 +1,6 @@
 [submodule "picoredis"]
 	path = picoredis
 	url = https://github.com/SpotlightKid/picoredis.git
+[submodule "mrequests"]
+	path = mrequests
+	url = https://github.com/SpotlightKid/mrequests
