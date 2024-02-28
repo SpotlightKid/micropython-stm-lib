@@ -1,2 +1,2 @@
 from netconfig import connect
-connect('example-netconfig.json')
+connect('example-wifi.json')
