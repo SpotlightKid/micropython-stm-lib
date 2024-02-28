@@ -1,7 +1,6 @@
-# -*- coding: utf-8 -*-
-"""Read encoder and print position value to LCD."""
+"""Read encoder and show position value on HD44780 LCD."""
 
-from machine import sleep_ms
+from time import sleep_ms
 from pyb_encoder import Encoder
 from hd44780 import HD44780
 
@@ -12,21 +11,17 @@ class STM_LCDShield(HD44780):
 
 def main():
     lcd.set_string("Value: ")
-    lastval = 0
 
     while True:
-        val = enc.value
-        if lastval != val:
-            lastval = val
+        if (val := enc.poll()) is not None:
             lcd.set_cursor(6, 0)
             for c in "%3i" % val:
                 lcd.send_byte(c)
 
-        enc.cur_accel = max(0, enc.cur_accel - enc.accel)
         sleep_ms(50)
 
 
 if __name__ == '__main__':
     lcd = STM_LCDShield()
-    enc = Encoder('A0', 'A1', max_value=999, accel=5)
+    enc = Encoder('A0', 'A1', max_val=999, accel=5)
     main()
