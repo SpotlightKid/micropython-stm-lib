@@ -30,7 +30,7 @@ class Encoder(BaseEncoder):
         self.pin_mode = kwargs.setdefault('pin_mode', Pin.PULL_NONE)
         super().__init__(*args, **kwargs)
 
-    def set_callbacks(self, callback=None):
+    def set_isr(self, callback=None):
         mode = ExtInt.IRQ_RISING_FALLING
         self.irq_clk = ExtInt(self.pin_clk, mode, self.pin_mode, callback)
         self.irq_dt = ExtInt(self.pin_dt, mode, self.pin_mode, callback)
