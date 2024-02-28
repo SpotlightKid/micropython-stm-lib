@@ -66,7 +66,7 @@ with a 31250 baud rate the time to receive one byte is about 0.3 milliseconds.
 
 ### Soft Thru
 
-If you pass `softthru=True` to the `MidiIn` contructor, the serial device
+If you pass `softthru=True` to the `MidiIn` constructor, the serial device
 instance you pass must also have a `write` method, which accepts one argument
 of type `bytes`. Each byte received via the `read` method of the device is then
 passed to the `write` method unfiltered and unaltered. This allows you to
